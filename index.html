@@ -1,225 +1,4201 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Garasi Pamikul — Asisten Mobil & Motor + Catatan</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-                    }
-                }
-            }
-        }
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+            },
+          },
+        },
+      };
     </script>
     <style>
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 9999px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
 
-        @keyframes pulseDot {
-            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-            40% { transform: scale(1); opacity: 1; }
+      @keyframes pulseDot {
+        0%,
+        80%,
+        100% {
+          transform: scale(0.6);
+          opacity: 0.4;
         }
-        .dot-1 { animation: pulseDot 1.2s infinite ease-in-out 0s; }
-        .dot-2 { animation: pulseDot 1.2s infinite ease-in-out 0.2s; }
-        .dot-3 { animation: pulseDot 1.2s infinite ease-in-out 0.4s; }
+        40% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .dot-1 {
+        animation: pulseDot 1.2s infinite ease-in-out 0s;
+      }
+      .dot-2 {
+        animation: pulseDot 1.2s infinite ease-in-out 0.2s;
+      }
+      .dot-3 {
+        animation: pulseDot 1.2s infinite ease-in-out 0.4s;
+      }
 
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
     </style>
-</head>
-<body class="bg-slate-100 text-slate-900 font-sans antialiased h-screen overflow-hidden flex flex-col selection:bg-blue-100 selection:text-blue-900">
-
+  </head>
+  <body
+    class="bg-slate-100 text-slate-900 font-sans antialiased h-screen overflow-hidden flex flex-col selection:bg-blue-100 selection:text-blue-900"
+  >
     <!-- =================================================================== -->
     <!-- PIN LOCK OVERLAY (PROTEKSI AKSES MULTI-DEVICE)                      -->
     <!-- =================================================================== -->
-    <div id="pinOverlay" class="fixed inset-0 z-50 bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-sm w-full p-6 text-center space-y-5">
-            <div class="w-14 h-14 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-extrabold text-xl tracking-tight mx-auto shadow-md">
-                GP
-            </div>
-            <div class="space-y-1">
-                <h2 class="text-lg font-extrabold text-slate-900">Garasi Pamikul</h2>
-                <p class="text-xs text-slate-500">Masukkan PIN akses untuk membuka garasi & sinkronisasi AI</p>
-            </div>
-            <form onsubmit="handlePinSubmit(event)" class="space-y-3">
-                <input id="pinInput" type="password" inputmode="numeric" autocomplete="off" placeholder="Masukkan PIN..." required class="w-full text-center tracking-[0.35em] text-lg font-bold px-4 py-3 bg-slate-50 border border-slate-300 rounded-2xl focus:outline-none focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-500/15 transition-all">
-                <p id="pinErrorText" class="text-xs text-rose-600 font-medium hidden">PIN salah atau tidak valid.</p>
-                <button id="pinSubmitBtn" type="submit" class="w-full py-3 px-4 rounded-2xl bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white text-sm font-bold shadow-sm transition-all">
-                    Buka Garasi
-                </button>
-            </form>
+    <div
+      id="pinOverlay"
+      class="fixed inset-0 z-50 bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-sm w-full p-6 text-center space-y-5"
+      >
+        <div
+          class="w-14 h-14 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-extrabold text-xl tracking-tight mx-auto shadow-md"
+        >
+          GP
         </div>
+        <div class="space-y-1">
+          <h2 class="text-lg font-extrabold text-slate-900">Garasi Pamikul</h2>
+          <p class="text-xs text-slate-500">
+            Masukkan PIN akses untuk membuka garasi & sinkronisasi AI
+          </p>
+        </div>
+        <form onsubmit="handlePinSubmit(event)" class="space-y-3">
+          <input
+            id="pinInput"
+            type="password"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="Masukkan PIN..."
+            required
+            class="w-full text-center tracking-[0.35em] text-lg font-bold px-4 py-3 bg-slate-50 border border-slate-300 rounded-2xl focus:outline-none focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-500/15 transition-all"
+          />
+          <p id="pinErrorText" class="text-xs text-rose-600 font-medium hidden">
+            PIN salah atau tidak valid.
+          </p>
+          <button
+            id="pinSubmitBtn"
+            type="submit"
+            class="w-full py-3 px-4 rounded-2xl bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white text-sm font-bold shadow-sm transition-all"
+          >
+            Buka Garasi
+          </button>
+        </form>
+      </div>
     </div>
 
     <!-- Mobile Drawers Backdrop -->
-    <div id="drawerBackdrop" class="fixed inset-0 bg-slate-900/35 backdrop-blur-xs z-30 hidden lg:hidden transition-opacity" onclick="closeAllDrawers()"></div>
+    <div
+      id="drawerBackdrop"
+      class="fixed inset-0 bg-slate-900/35 backdrop-blur-xs z-30 hidden lg:hidden transition-opacity"
+      onclick="closeAllDrawers()"
+    ></div>
 
     <!-- =================================================================== -->
     <!-- TOP GLOBAL BAR: Brand + Menu Utama di Tengah Paling Atas            -->
     <!-- =================================================================== -->
-    <header class="h-14 px-3 sm:px-5 bg-white border-b border-slate-200/90 flex items-center justify-between gap-2 shrink-0 z-20 shadow-2xs">
-        <div class="flex items-center gap-2 min-w-0">
-            <button onclick="toggleLeftPanel(true)" class="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200/80" aria-label="Buka Panel Kendaraan & Mode" title="Kendaraan & Mode">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/></svg>
-            </button>
-            <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center font-extrabold text-xs tracking-tight shadow-xs shrink-0">
-                    GP
-                </div>
-                <div class="hidden sm:block leading-tight">
-                    <h1 class="font-extrabold text-slate-900 text-sm tracking-tight">Garasi Pamikul</h1>
-                    <p class="text-[10px] text-slate-500 font-medium">Asisten Mobil & Motor</p>
-                </div>
-            </div>
+    <header
+      class="h-14 px-3 sm:px-5 bg-white border-b border-slate-200/90 flex items-center justify-between gap-2 shrink-0 z-20 shadow-2xs"
+    >
+      <div class="flex items-center gap-2 min-w-0">
+        <button
+          onclick="toggleLeftPanel(true)"
+          class="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200/80"
+          aria-label="Buka Panel Kendaraan & Mode"
+          title="Kendaraan & Mode"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+            />
+          </svg>
+        </button>
+        <div class="flex items-center gap-2.5">
+          <div
+            class="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center font-extrabold text-xs tracking-tight shadow-xs shrink-0"
+          >
+            GP
+          </div>
+          <div class="hidden sm:block leading-tight">
+            <h1 class="font-extrabold text-slate-900 text-sm tracking-tight">
+              Garasi Pamikul
+            </h1>
+            <p class="text-[10px] text-slate-500 font-medium">
+              Asisten Mobil & Motor
+            </p>
+          </div>
         </div>
+      </div>
 
-        <nav aria-label="Menu Utama" class="flex items-center bg-slate-100/90 border border-slate-200/90 p-1 rounded-2xl shadow-inner max-w-full overflow-x-auto no-scrollbar">
-            <button id="mainTabChat" onclick="switchView('chat')" class="px-3 sm:px-4 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all bg-white text-blue-700 shadow-xs whitespace-nowrap">
-                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
-                <span>Diskusi AI</span>
-            </button>
-            <button id="mainTabNotes" onclick="switchView('notes')" class="px-3 sm:px-4 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap">
-                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                <span>Catatan</span>
-                <span id="notesCountBadge" class="px-1.5 py-0.2 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold">0</span>
-            </button>
-            <button id="mainTabVehicles" onclick="switchView('vehicles')" class="px-3 sm:px-4 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap">
-                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/></svg>
-                <span class="hidden md:inline">Daftar Kendaraan</span>
-                <span class="md:hidden">Garasi</span>
-                <span id="vehiclesCountBadge" class="px-1.5 py-0.2 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold">6</span>
-            </button>
-        </nav>
+      <nav
+        aria-label="Menu Utama"
+        class="flex items-center bg-slate-100/90 border border-slate-200/90 p-1 rounded-2xl shadow-inner max-w-full overflow-x-auto no-scrollbar"
+      >
+        <button
+          id="mainTabChat"
+          onclick="switchView('chat')"
+          class="px-3 sm:px-4 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all bg-white text-blue-700 shadow-xs whitespace-nowrap"
+        >
+          <svg
+            class="w-3.5 h-3.5 shrink-0"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+            />
+          </svg>
+          <span>Diskusi AI</span>
+        </button>
+        <button
+          id="mainTabNotes"
+          onclick="switchView('notes')"
+          class="px-3 sm:px-4 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap"
+        >
+          <svg
+            class="w-3.5 h-3.5 shrink-0"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
+          </svg>
+          <span>Catatan</span>
+          <span
+            id="notesCountBadge"
+            class="px-1.5 py-0.2 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold"
+            >0</span
+          >
+        </button>
+        <button
+          id="mainTabVehicles"
+          onclick="switchView('vehicles')"
+          class="px-3 sm:px-4 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap"
+        >
+          <svg
+            class="w-3.5 h-3.5 shrink-0"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"
+            />
+          </svg>
+          <span class="hidden md:inline">Daftar Kendaraan</span>
+          <span class="md:hidden">Garasi</span>
+          <span
+            id="vehiclesCountBadge"
+            class="px-1.5 py-0.2 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold"
+            >6</span
+          >
+        </button>
+      </nav>
 
-        <div class="flex items-center gap-1.5">
-            <button id="headerCopyChatBtn" onclick="copySessionSummary()" class="hidden sm:flex py-1.5 px-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200/80 items-center gap-1.5 transition-colors" title="Salin Obrolan">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                <span class="hidden xl:inline">Salin</span>
-            </button>
-            <button onclick="toggleRightPanel(true)" class="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200/80" aria-label="Buka Daftar Riwayat & Catatan" title="Daftar Diskusi & Catatan">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
-            </button>
-        </div>
+      <div class="flex items-center gap-1.5">
+        <button
+          id="headerCopyChatBtn"
+          onclick="copySessionSummary()"
+          class="hidden sm:flex py-1.5 px-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200/80 items-center gap-1.5 transition-colors"
+          title="Salin Obrolan"
+        >
+          <svg
+            class="w-3.5 h-3.5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+            />
+          </svg>
+          <span class="hidden xl:inline">Salin</span>
+        </button>
+        <button
+          onclick="toggleRightPanel(true)"
+          class="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200/80"
+          aria-label="Buka Daftar Riwayat & Catatan"
+          title="Daftar Diskusi & Catatan"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+            />
+          </svg>
+        </button>
+      </div>
     </header>
 
     <!-- =================================================================== -->
     <!-- BODY 3-PANEL LAYOUT: KIRI | TENGAH | KANAN                          -->
     <!-- =================================================================== -->
     <div class="flex-1 flex min-h-0 overflow-hidden relative">
+      <!-- PANEL KIRI -->
+      <aside
+        id="leftPanel"
+        class="fixed lg:static inset-y-0 left-0 z-40 w-72 xl:w-76 bg-white border-r border-slate-200/90 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-out shadow-2xl lg:shadow-none"
+      >
+        <div
+          class="px-4 py-3 border-b border-slate-100 flex items-center justify-between lg:hidden"
+        >
+          <span
+            class="font-bold text-xs uppercase tracking-wider text-slate-500"
+            >Kontrol Kendaraan & Mode</span
+          >
+          <button
+            onclick="toggleLeftPanel(false)"
+            class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
 
-        <!-- PANEL KIRI -->
-        <aside id="leftPanel" class="fixed lg:static inset-y-0 left-0 z-40 w-72 xl:w-76 bg-white border-r border-slate-200/90 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-out shadow-2xl lg:shadow-none">
-            <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between lg:hidden">
-                <span class="font-bold text-xs uppercase tracking-wider text-slate-500">Kontrol Kendaraan & Mode</span>
-                <button onclick="toggleLeftPanel(false)" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        <div class="flex-1 overflow-y-auto p-3.5 space-y-4">
+          <section
+            class="p-3 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-2.5"
+          >
+            <div class="flex items-center justify-between">
+              <span
+                class="text-[11px] font-bold uppercase tracking-wider text-slate-600"
+                >Pilihan Kendaraan</span
+              >
+              <button
+                onclick="switchView('vehicles')"
+                class="text-[10px] font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+              >
+                Kelola
+              </button>
+            </div>
+
+            <button
+              onclick="openVehicleModal()"
+              class="w-full p-2.5 rounded-xl bg-white hover:bg-blue-50/60 border border-slate-200 hover:border-blue-400 flex items-center justify-between gap-2.5 text-left transition-all shadow-2xs group"
+            >
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div
+                  id="leftVehicleThumb"
+                  class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-[10px] shrink-0 shadow-xs overflow-hidden text-center leading-tight px-1"
+                >
+                  B13
+                </div>
+                <div class="min-w-0">
+                  <span
+                    id="leftVehicleCategory"
+                    class="text-[10px] font-bold uppercase tracking-wider text-blue-600 block"
+                    >Mobil</span
+                  >
+                  <p
+                    id="leftVehicleName"
+                    class="text-xs font-bold text-slate-900 truncate"
+                  >
+                    Nissan Sentra B13 '96
+                  </p>
+                  <p
+                    id="leftVehicleSub"
+                    class="text-[10px] text-slate-500 truncate"
+                  >
+                    GA16DE Injeksi
+                  </p>
+                </div>
+              </div>
+              <div
+                class="p-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-500 group-hover:text-blue-600 group-hover:border-blue-300 shrink-0 transition-colors"
+                title="Ganti Kendaraan"
+              >
+                <svg
+                  class="w-3.5 h-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M8 9l4-4 4 4m0 6l-4 4-4-4"
+                  />
+                </svg>
+              </div>
+            </button>
+
+            <button
+              onclick="openGuideModal()"
+              class="w-full py-2 px-3 rounded-xl bg-white hover:bg-blue-50 text-slate-800 hover:text-blue-700 border border-slate-300/90 hover:border-blue-400 text-xs font-semibold flex items-center justify-between transition-colors shadow-2xs"
+            >
+              <span class="flex items-center gap-2 truncate">
+                <svg
+                  class="w-4 h-4 text-blue-600 shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                  />
+                </svg>
+                <span id="sidebarGuideLabel" class="truncate">Panduan B13</span>
+              </span>
+              <svg
+                class="w-3.5 h-3.5 text-slate-400 shrink-0"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+          </section>
+
+          <section
+            class="p-3 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-3"
+          >
+            <div>
+              <span
+                class="text-[11px] font-bold uppercase tracking-wider text-slate-600 block mb-2"
+                >Pilihan Mode</span
+              >
+              <div id="modeSelector" class="grid grid-cols-2 gap-1.5"></div>
+            </div>
+
+            <div class="space-y-2.5 pt-2 border-t border-slate-200/80">
+              <div>
+                <label
+                  for="partSelect"
+                  class="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1"
+                  >Bagian</label
+                >
+                <div class="relative">
+                  <select
+                    id="partSelect"
+                    onchange="handleContextChange()"
+                    class="w-full appearance-none bg-white border border-slate-300 hover:border-blue-500 rounded-xl pl-3 pr-8 py-2 text-xs font-semibold text-slate-800 shadow-2xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/15 transition-all cursor-pointer"
+                  ></select>
+                  <svg
+                    class="w-3.5 h-3.5 text-slate-600 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              <div>
+                <label
+                  for="conditionSelect"
+                  class="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1"
+                  >Kondisi</label
+                >
+                <div class="relative">
+                  <select
+                    id="conditionSelect"
+                    onchange="handleContextChange()"
+                    class="w-full appearance-none bg-white border border-slate-300 hover:border-blue-500 rounded-xl pl-3 pr-8 py-2 text-xs font-semibold text-slate-800 shadow-2xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/15 transition-all cursor-pointer"
+                  >
+                    <option value="Umum / Tidak Spesifik">Bebas / Umum</option>
+                    <option value="Saat mesin dingin / starter pagi">
+                      Mesin Dingin / Pagi
+                    </option>
+                    <option value="Saat mesin sudah panas (suhu kerja)">
+                      Mesin Panas (Suhu Kerja)
+                    </option>
+                    <option value="Saat akselerasi / tarikan awal / tanjakan">
+                      Akselerasi / Tanjakan
+                    </option>
+                    <option value="Saat kecepatan tinggi / jalan rata">
+                      Kecepatan Tinggi
+                    </option>
+                    <option value="Saat idle / langsam / macet">
+                      Idle / Langsam / Macet
+                    </option>
+                  </select>
+                  <svg
+                    class="w-3.5 h-3.5 text-slate-600 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Footer Panel Kiri: Backup JSON, Kunci PIN & Status Sync -->
+        <div class="p-3 border-t border-slate-200/80 bg-slate-50/90 space-y-2">
+          <div class="grid grid-cols-2 gap-1.5">
+            <button
+              onclick="exportBackupJson()"
+              class="py-1.5 px-2.5 rounded-xl bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-300/90 hover:border-emerald-300 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
+              title="Simpan semua data ke file JSON"
+            >
+              <svg
+                class="w-3.5 h-3.5 text-emerald-600 shrink-0"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                />
+              </svg>
+              <span>Save JSON</span>
+            </button>
+            <button
+              onclick="triggerImportJson()"
+              class="py-1.5 px-2.5 rounded-xl bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300/90 hover:border-blue-300 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
+              title="Muat kembali data dari file JSON"
+            >
+              <svg
+                class="w-3.5 h-3.5 text-blue-600 shrink-0"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                />
+              </svg>
+              <span>Load JSON</span>
+            </button>
+            <input
+              id="jsonFileInput"
+              type="file"
+              accept=".json,application/json"
+              class="hidden"
+              onchange="handleJsonFileSelect(event)"
+            />
+          </div>
+
+          <div class="flex items-center justify-between gap-2 px-0.5">
+            <p id="syncStatusText" class="text-[10px] text-slate-400 truncate">
+              Menghubungkan Cloud...
+            </p>
+            <button
+              onclick="lockApp()"
+              class="text-[10px] font-semibold text-slate-500 hover:text-rose-600 underline decoration-dotted shrink-0 transition-colors"
+              title="Kunci aplikasi dan minta PIN lagi"
+            >
+              Kunci PIN
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- AREA TENGAH -->
+      <main class="flex-1 flex flex-col min-w-0 bg-white relative">
+        <div
+          class="px-4 sm:px-6 py-3.5 border-b border-slate-100 bg-white/95 text-center shrink-0"
+        >
+          <div class="flex items-center justify-center gap-2 max-w-2xl mx-auto">
+            <h2
+              id="activeHeaderTitle"
+              class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight truncate"
+            >
+              Sesi Baru
+            </h2>
+            <button
+              id="renameTitleBtn"
+              onclick="openRenameModal()"
+              title="Ubah Judul Diskusi"
+              class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 shrink-0 transition-colors"
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
+            class="mt-0.5 flex items-center justify-center gap-2 text-xs text-slate-500 font-medium"
+          >
+            <span id="todayDateText"></span>
+            <span class="text-slate-300">•</span>
+            <span id="centerVehicleTag" class="font-semibold text-blue-600"
+              >Nissan Sentra Genesis B13 1996</span
+            >
+          </div>
+        </div>
+
+        <!-- VIEW 1: DISKUSI AI -->
+        <div id="chatView" class="flex-1 flex flex-col min-h-0">
+          <div
+            id="chatContainer"
+            class="flex-1 overflow-y-auto px-4 sm:px-6 py-5 scroll-smooth"
+          >
+            <div id="chatInner" class="max-w-3xl mx-auto space-y-5"></div>
+          </div>
+
+          <div class="p-3 sm:p-4 bg-white border-t border-slate-100">
+            <div class="max-w-3xl mx-auto space-y-2">
+              <div
+                id="chatPhotoPreviewBar"
+                class="hidden items-center gap-2.5 p-2 rounded-xl bg-blue-50/70 border border-blue-200/80"
+              >
+                <img
+                  id="chatPhotoPreviewImg"
+                  src=""
+                  alt="Preview Foto"
+                  class="w-12 h-12 rounded-lg object-cover border border-blue-200 bg-white"
+                />
+                <div class="flex-1 min-w-0">
+                  <p
+                    class="text-xs font-semibold text-blue-900 truncate"
+                    id="chatPhotoPreviewName"
+                  >
+                    Foto terlampir
+                  </p>
+                  <p class="text-[10px] text-blue-600">
+                    Foto akan dianalisa langsung oleh AI
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onclick="clearPendingChatPhoto()"
+                  class="p-1.5 rounded-lg text-rose-600 hover:bg-rose-100 transition-colors"
+                  title="Hapus Foto"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
                 </button>
+              </div>
+
+              <form
+                id="chatForm"
+                onsubmit="handleSendMessage(event)"
+                class="relative flex items-end gap-2 bg-slate-50 border border-slate-300/90 focus-within:border-blue-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-500/10 rounded-2xl p-2 transition-all"
+              >
+                <button
+                  type="button"
+                  onclick="triggerChatPhotoUpload()"
+                  class="p-2.5 rounded-xl bg-white hover:bg-blue-50 text-slate-600 hover:text-blue-600 border border-slate-200/90 transition-colors shrink-0"
+                  title="Upload Foto Kerusakan / Part untuk Dianalisa AI"
+                  aria-label="Upload Foto"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                    />
+                  </svg>
+                </button>
+                <input
+                  id="chatPhotoInput"
+                  type="file"
+                  accept="image/*"
+                  class="hidden"
+                  onchange="handleChatPhotoSelect(event)"
+                />
+
+                <textarea
+                  id="messageInput"
+                  rows="1"
+                  placeholder="Ceritakan gejala, rencana modifikasi, atau lampirkan foto..."
+                  class="flex-1 bg-transparent resize-none border-0 focus:ring-0 focus:outline-none text-sm text-slate-800 placeholder-slate-400 px-2 py-2 max-h-36 leading-relaxed"
+                  oninput="autoResizeTextarea(this)"
+                  onkeydown="handleInputKeydown(event)"
+                ></textarea>
+
+                <button
+                  type="submit"
+                  id="sendBtn"
+                  class="p-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white transition-all shrink-0 shadow-xs active:scale-95"
+                  aria-label="Kirim Pesan"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                    />
+                  </svg>
+                </button>
+              </form>
+              <div
+                class="flex items-center justify-between px-1 text-[11px] text-slate-400"
+              >
+                <span id="inputFooterSpec"
+                  >Aktif: Nissan Sentra Genesis B13 1996</span
+                >
+                <span class="hidden sm:inline"
+                  >Enter kirim • Shift+Enter baris baru</span
+                >
+              </div>
             </div>
+          </div>
+        </div>
 
-            <div class="flex-1 overflow-y-auto p-3.5 space-y-4">
-                <section class="p-3 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-2.5">
-                    <div class="flex items-center justify-between">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-600">Pilihan Kendaraan</span>
-                        <button onclick="switchView('vehicles')" class="text-[10px] font-semibold text-blue-600 hover:text-blue-700 hover:underline">Kelola</button>
-                    </div>
-
-                    <button onclick="openVehicleModal()" class="w-full p-2.5 rounded-xl bg-white hover:bg-blue-50/60 border border-slate-200 hover:border-blue-400 flex items-center justify-between gap-2.5 text-left transition-all shadow-2xs group">
-                        <div class="flex items-center gap-2.5 min-w-0">
-                            <div id="leftVehicleThumb" class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-[10px] shrink-0 shadow-xs overflow-hidden text-center leading-tight px-1">
-                                B13
-                            </div>
-                            <div class="min-w-0">
-                                <span id="leftVehicleCategory" class="text-[10px] font-bold uppercase tracking-wider text-blue-600 block">Mobil</span>
-                                <p id="leftVehicleName" class="text-xs font-bold text-slate-900 truncate">Nissan Sentra B13 '96</p>
-                                <p id="leftVehicleSub" class="text-[10px] text-slate-500 truncate">GA16DE Injeksi</p>
-                            </div>
-                        </div>
-                        <div class="p-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-500 group-hover:text-blue-600 group-hover:border-blue-300 shrink-0 transition-colors" title="Ganti Kendaraan">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4"/></svg>
-                        </div>
-                    </button>
-
-                    <button onclick="openGuideModal()" class="w-full py-2 px-3 rounded-xl bg-white hover:bg-blue-50 text-slate-800 hover:text-blue-700 border border-slate-300/90 hover:border-blue-400 text-xs font-semibold flex items-center justify-between transition-colors shadow-2xs">
-                        <span class="flex items-center gap-2 truncate">
-                            <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/></svg>
-                            <span id="sidebarGuideLabel" class="truncate">Panduan B13</span>
-                        </span>
-                        <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                    </button>
-                </section>
-
-                <section class="p-3 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-3">
-                    <div>
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-600 block mb-2">Pilihan Mode</span>
-                        <div id="modeSelector" class="grid grid-cols-2 gap-1.5"></div>
-                    </div>
-
-                    <div class="space-y-2.5 pt-2 border-t border-slate-200/80">
-                        <div>
-                            <label for="partSelect" class="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">Bagian</label>
-                            <div class="relative">
-                                <select id="partSelect" onchange="handleContextChange()" class="w-full appearance-none bg-white border border-slate-300 hover:border-blue-500 rounded-xl pl-3 pr-8 py-2 text-xs font-semibold text-slate-800 shadow-2xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/15 transition-all cursor-pointer"></select>
-                                <svg class="w-3.5 h-3.5 text-slate-600 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="conditionSelect" class="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">Kondisi</label>
-                            <div class="relative">
-                                <select id="conditionSelect" onchange="handleContextChange()" class="w-full appearance-none bg-white border border-slate-300 hover:border-blue-500 rounded-xl pl-3 pr-8 py-2 text-xs font-semibold text-slate-800 shadow-2xs focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/15 transition-all cursor-pointer">
-                                    <option value="Umum / Tidak Spesifik">Bebas / Umum</option>
-                                    <option value="Saat mesin dingin / starter pagi">Mesin Dingin / Pagi</option>
-                                    <option value="Saat mesin sudah panas (suhu kerja)">Mesin Panas (Suhu Kerja)</option>
-                                    <option value="Saat akselerasi / tarikan awal / tanjakan">Akselerasi / Tanjakan</option>
-                                    <option value="Saat kecepatan tinggi / jalan rata">Kecepatan Tinggi</option>
-                                    <option value="Saat idle / langsam / macet">Idle / Langsam / Macet</option>
-                                </select>
-                                <svg class="w-3.5 h-3.5 text-slate-600 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+        <!-- VIEW 2: CATATAN KEJADIAN -->
+        <div
+          id="notesView"
+          class="hidden flex-1 flex-col min-h-0 bg-slate-50/50"
+        >
+          <div
+            class="px-4 sm:px-6 py-3 bg-white border-b border-slate-100 flex flex-wrap items-center justify-between gap-2.5"
+          >
+            <div class="flex items-center gap-2 flex-wrap">
+              <div
+                class="inline-flex bg-slate-100 p-1 rounded-xl border border-slate-200/80"
+              >
+                <button
+                  id="notesScopeActiveBtn"
+                  onclick="setNotesScope('active')"
+                  class="px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-900 shadow-2xs transition-all"
+                >
+                  Kendaraan Aktif
+                </button>
+                <button
+                  id="notesScopeAllBtn"
+                  onclick="setNotesScope('all')"
+                  class="px-3 py-1 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all"
+                >
+                  Semua Garasi
+                </button>
+              </div>
+              <select
+                id="notesCategoryFilter"
+                onchange="
+                  renderNotesList();
+                  renderRightPanel();
+                "
+                class="bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:border-blue-500"
+              >
+                <option value="Semua">Semua Kategori</option>
+                <option value="Kejadian / Keluhan">Kejadian / Keluhan</option>
+                <option value="Servis & Oli">Servis & Oli</option>
+                <option value="Ganti Sparepart">Ganti Sparepart</option>
+                <option value="Modifikasi">Modifikasi</option>
+                <option value="Pengingat / Lainnya">Pengingat / Lainnya</option>
+              </select>
             </div>
+            <button
+              onclick="openNoteModal()"
+              class="py-1.5 px-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors"
+            >
+              <svg
+                class="w-3.5 h-3.5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+              <span>Buat Catatan</span>
+            </button>
+          </div>
 
-            <!-- Footer Panel Kiri: Backup JSON, Kunci PIN & Status Sync -->
-            <div class="p-3 border-t border-slate-200/80 bg-slate-50/90 space-y-2">
-                <div class="grid grid-cols-2 gap-1.5">
-                    <button onclick="exportBackupJson()" class="py-1.5 px-2.5 rounded-xl bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-300/90 hover:border-emerald-300 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs" title="Simpan semua data ke file JSON">
-                        <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                        <span>Save JSON</span>
-                    </button>
-                    <button onclick="triggerImportJson()" class="py-1.5 px-2.5 rounded-xl bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-300/90 hover:border-blue-300 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-2xs" title="Muat kembali data dari file JSON">
-                        <svg class="w-3.5 h-3.5 text-blue-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                        <span>Load JSON</span>
-                    </button>
-                    <input id="jsonFileInput" type="file" accept=".json,application/json" class="hidden" onchange="handleJsonFileSelect(event)">
-                </div>
-
-                <div class="flex items-center justify-between gap-2 px-0.5">
-                    <p id="syncStatusText" class="text-[10px] text-slate-400 truncate">Menghubungkan Cloud...</p>
-                    <button onclick="lockApp()" class="text-[10px] font-semibold text-slate-500 hover:text-rose-600 underline decoration-dotted shrink-0 transition-colors" title="Kunci aplikasi dan minta PIN lagi">
-                        Kunci PIN
-                    </button>
-                </div>
+          <div class="flex-1 overflow-y-auto px-4 sm:px-6 py-5">
+            <div class="max-w-4xl mx-auto">
+              <div
+                id="notesListContainer"
+                class="grid grid-cols-1 md:grid-cols-2 gap-3.5"
+              ></div>
             </div>
-        </aside>
+          </div>
+        </div>
 
-        <!-- AREA TENGAH -->
-        <main class="flex-1 flex flex-col min-w-0 bg-white relative">
-            <div class="px-4 sm:px-6 py-3.5 border-b border-slate-100 bg-white/95 text-center shrink-0">
-                <div class="flex items-center justify-center gap-2 max-w-2xl mx-auto">
-                    <h2 id="activeHeaderTitle" class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight truncate">Sesi Baru</h2>
-                    <button id="renameTitleBtn" onclick="openRenameModal()" title="Ubah Judul Diskusi" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 shrink-0 transition-colors">
-                        <svg class="w
+        <!-- VIEW 3: DAFTAR KENDARAAN -->
+        <div
+          id="vehiclesView"
+          class="hidden flex-1 flex-col min-h-0 bg-slate-50/50"
+        >
+          <div
+            class="px-4 sm:px-6 py-3 bg-white border-b border-slate-100 flex flex-wrap items-center justify-between gap-2.5"
+          >
+            <div class="flex items-center gap-2">
+              <div
+                class="inline-flex bg-slate-100 p-1 rounded-xl border border-slate-200/80"
+              >
+                <button
+                  id="vehFilterAll"
+                  onclick="setVehicleFilter('Semua')"
+                  class="px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-900 shadow-2xs transition-all"
+                >
+                  Semua
+                </button>
+                <button
+                  id="vehFilterMobil"
+                  onclick="setVehicleFilter('Mobil')"
+                  class="px-3 py-1 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all"
+                >
+                  Mobil
+                </button>
+                <button
+                  id="vehFilterMotor"
+                  onclick="setVehicleFilter('Motor')"
+                  class="px-3 py-1 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all"
+                >
+                  Motor
+                </button>
+              </div>
+            </div>
+            <button
+              onclick="openVehicleFormModal()"
+              class="py-1.5 px-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors"
+            >
+              <svg
+                class="w-3.5 h-3.5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+              <span>Tambah Kendaraan</span>
+            </button>
+          </div>
+
+          <div class="flex-1 overflow-y-auto px-4 sm:px-6 py-5">
+            <div class="max-w-4xl mx-auto">
+              <div
+                id="vehiclesGridContainer"
+                class="grid grid-cols-1 md:grid-cols-2 gap-3.5"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- PANEL KANAN -->
+      <aside
+        id="rightPanel"
+        class="fixed lg:static inset-y-0 right-0 z-40 w-76 sm:w-80 bg-white border-l border-slate-200/90 flex flex-col transform translate-x-full lg:translate-x-0 transition-transform duration-200 ease-out shadow-2xl lg:shadow-none"
+      >
+        <div
+          class="px-3.5 py-3 border-b border-slate-100 flex items-center justify-between lg:hidden"
+        >
+          <span
+            class="font-bold text-xs uppercase tracking-wider text-slate-500"
+            >Daftar & Aksi Cepat</span
+          >
+          <button
+            onclick="toggleRightPanel(false)"
+            class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div class="p-3 border-b border-slate-100 space-y-2.5 bg-slate-50/70">
+          <div class="grid grid-cols-2 gap-2">
+            <button
+              onclick="createNewSession()"
+              class="py-2 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-[0.98] text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shadow-xs"
+            >
+              <svg
+                class="w-3.5 h-3.5 shrink-0"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+              <span>Obrolan Baru</span>
+            </button>
+            <button
+              onclick="openNoteModal()"
+              class="py-2 px-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shadow-xs"
+            >
+              <svg
+                class="w-3.5 h-3.5 shrink-0"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+              <span>Buat Catatan</span>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between pt-0.5">
+            <span
+              id="rightPanelTitle"
+              class="text-[11px] font-bold uppercase tracking-wider text-slate-600"
+              >List Diskusi</span
+            >
+            <button
+              id="rightPanelQuickAddBtn"
+              onclick="openVehicleFormModal()"
+              class="hidden text-[11px] font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+            >
+              + Tambah
+            </button>
+          </div>
+
+          <div class="relative">
+            <svg
+              class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18a7.5 7.5 0 006.15-3.35z"
+              />
+            </svg>
+            <input
+              id="rightPanelSearch"
+              type="text"
+              placeholder="Cari di daftar..."
+              oninput="renderRightPanel()"
+              class="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors"
+            />
+          </div>
+
+          <div
+            id="historyFilterContainer"
+            class="flex items-center gap-1 overflow-x-auto no-scrollbar"
+          ></div>
+        </div>
+
+        <div
+          id="rightPanelList"
+          class="flex-1 overflow-y-auto p-3 space-y-1.5"
+        ></div>
+      </aside>
+    </div>
+
+    <!-- MODAL: PILIH KENDARAAN -->
+    <div
+      id="vehicleModal"
+      class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs"
+    >
+      <div
+        class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-2xl w-full max-h-[88vh] flex flex-col overflow-hidden"
+      >
+        <div
+          class="px-5 py-4 border-b border-slate-100 flex items-center justify-between gap-2"
+        >
+          <div>
+            <h3 class="font-bold text-slate-900 text-base">
+              Pilihan Kendaraan — Garasi Pamikul
+            </h3>
+            <p class="text-xs text-slate-500">
+              Pilih mobil atau motor yang ingin didiskusikan atau dicatat
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              onclick="
+                closeVehicleModal();
+                openVehicleFormModal();
+              "
+              class="py-1.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-colors"
+            >
+              + Tambah
+            </button>
+            <button
+              onclick="closeVehicleModal()"
+              class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div id="vehicleModalBody" class="p-5 overflow-y-auto space-y-5"></div>
+      </div>
+    </div>
+
+    <!-- MODAL: TAMBAH / EDIT KENDARAAN -->
+    <div
+      id="vehicleFormModal"
+      class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs"
+    >
+      <div
+        class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full max-h-[90vh] flex flex-col overflow-hidden"
+      >
+        <div
+          class="px-5 py-4 border-b border-slate-100 flex items-center justify-between"
+        >
+          <div>
+            <h3
+              id="vehicleFormTitle"
+              class="font-bold text-slate-900 text-base"
+            >
+              Tambah Kendaraan Baru
+            </h3>
+            <p class="text-xs text-slate-500">
+              Tersinkron otomatis ke semua perangkat Anda
+            </p>
+          </div>
+          <button
+            onclick="closeVehicleFormModal()"
+            class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <form
+          id="vehicleForm"
+          onsubmit="saveVehicleFromModal(event)"
+          class="p-5 overflow-y-auto space-y-3.5"
+        >
+          <input type="hidden" id="vehEditId" />
+
+          <div
+            class="flex items-center gap-3.5 p-3 rounded-xl bg-slate-50 border border-slate-200"
+          >
+            <div
+              id="vehPhotoPreviewBox"
+              class="w-16 h-16 rounded-xl bg-slate-200 text-slate-500 flex items-center justify-center overflow-hidden shrink-0 text-xs font-bold"
+            >
+              Foto
+            </div>
+            <div class="flex-1 min-w-0 space-y-1.5">
+              <p class="text-xs font-semibold text-slate-700">
+                Foto Kendaraan (Opsional)
+              </p>
+              <div class="flex items-center gap-2">
+                <button
+                  type="button"
+                  onclick="document.getElementById('vehPhotoInput').click()"
+                  class="py-1.5 px-3 rounded-lg bg-white hover:bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-semibold transition-colors"
+                >
+                  Pilih Foto
+                </button>
+                <button
+                  type="button"
+                  id="vehPhotoClearBtn"
+                  onclick="clearVehicleFormPhoto()"
+                  class="hidden py-1.5 px-2.5 rounded-lg text-rose-600 hover:bg-rose-50 text-[11px] font-semibold transition-colors"
+                >
+                  Hapus
+                </button>
+                <input
+                  id="vehPhotoInput"
+                  type="file"
+                  accept="image/*"
+                  class="hidden"
+                  onchange="handleVehiclePhotoSelect(event)"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1"
+                >Kategori</label
+              >
+              <select
+                id="vehCategoryInput"
+                required
+                class="w-full px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-500"
+              >
+                <option value="Mobil">Mobil</option>
+                <option value="Motor">Motor</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1"
+                >Nama Singkat (Badge)</label
+              >
+              <input
+                id="vehShortNameInput"
+                type="text"
+                maxlength="10"
+                required
+                placeholder="Contoh: Avanza / Beat"
+                class="w-full px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1"
+              >Nama Lengkap Kendaraan & Tahun</label
+            >
+            <input
+              id="vehNameInput"
+              type="text"
+              required
+              placeholder="Contoh: Toyota Avanza 2015 / Honda Beat 2019"
+              class="w-full px-3.5 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-500"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1"
+                >Spesifikasi Mesin / Tipe</label
+              >
+              <input
+                id="vehSubtitleInput"
+                type="text"
+                required
+                placeholder="Contoh: 1.3L Dual VVT-i / 110cc eSP"
+                class="w-full px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1"
+                >Warna Badge</label
+              >
+              <select
+                id="vehColorInput"
+                class="w-full px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-500"
+              >
+                <option value="blue">Biru</option>
+                <option value="sky">Biru Langit</option>
+                <option value="indigo">Indigo</option>
+                <option value="emerald">Hijau Emerald</option>
+                <option value="amber">Kuning / Amber</option>
+                <option value="rose">Merah Rose</option>
+                <option value="red">Merah</option>
+                <option value="slate">Abu Gelap</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1"
+              >Catatan Teknis / Karakter Khusus (Opsional untuk AI)</label
+            >
+            <textarea
+              id="vehProfileInput"
+              rows="3"
+              placeholder="Misal: Transmisi manual, sudah ganti lampu LED, sering dipakai jarak jauh..."
+              class="w-full px-3.5 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-500 leading-relaxed resize-y"
+            ></textarea>
+          </div>
+
+          <div class="pt-2 flex justify-end gap-2">
+            <button
+              type="button"
+              onclick="closeVehicleFormModal()"
+              class="py-2 px-4 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-100"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              class="py-2 px-5 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white shadow-xs"
+            >
+              Simpan Kendaraan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL: BUAT / EDIT CATATAN -->
+    <div
+      id="noteModal"
+      class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs"
+    >
+      <div
+        class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full max-h-[90vh] flex flex-col overflow-hidden"
+      >
+        <div
+          class="px-5 py-4 border-b border-slate-100 flex items-center justify-between"
+        >
+          <div>
+            <h3 id="noteModalTitle" class="font-bold text-slate-900 text-base">
+              Catat Kejadian Kendaraan
+            </h3>
+            <p class="text-xs text-slate-500">
+              Tersinkron otomatis ke semua perangkat Anda
+            </p>
+          </div>
+          <button
+            onclick="closeNoteModal()"
+            class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <form
+          id="noteForm"
+          onsubmit="saveNoteFromModal(event)"
+          class="p-5 overflow-y-auto space-y-3.5"
+        >
+          <input type="hidden" id="noteEditId" />
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1"
+                >Kendaraan</label
+              >
+              <select
+                id="noteVehicleSelect"
+                required
+                class="w-full px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-500"
+              ></select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1"
+                >Kategori</label
+              >
+              <select
+                id="noteCategorySelect"
+                required
+                class="w-full px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-500"
+              >
+                <option value="Kejadian / Keluhan">Kejadian / Keluhan</option>
+                <option value="Servis & Oli">Servis & Oli</option>
+                <option value="Ganti Sparepart">Ganti Sparepart</option>
+                <option value="Modifikasi">Modifikasi</option>
+                <option value="Pengingat / Lainnya">Pengingat / Lainnya</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1"
+                >Tanggal Kejadian</label
+              >
+              <input
+                id="noteDateInput"
+                type="date"
+                required
+                class="w-full px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1"
+                >Odometer / KM (Opsional)</label
+              >
+              <input
+                id="noteOdometerInput"
+                type="text"
+                placeholder="Contoh: 184.500 km"
+                class="w-full px-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1"
+              >Judul Kejadian / Servis</label
+            >
+            <input
+              id="noteTitleInput"
+              type="text"
+              required
+              placeholder="Contoh: Mesin brebet di tol / Ganti oli mesin & busi"
+              class="w-full px-3.5 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1"
+              >Detail Catatan</label
+            >
+            <textarea
+              id="noteContentInput"
+              rows="4"
+              required
+              placeholder="Tulis kronologi kejadian, gejala, merek part yang diganti, nama bengkel, atau estimasi biaya..."
+              class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-blue-500 leading-relaxed resize-y"
+            ></textarea>
+          </div>
+
+          <div
+            class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2"
+          >
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-700"
+                >Foto Lampiran (Nota / Kerusakan / Odometer)</span
+              >
+              <button
+                type="button"
+                onclick="document.getElementById('notePhotoInput').click()"
+                class="py-1 px-2.5 rounded-lg bg-white hover:bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-semibold transition-colors"
+              >
+                + Upload Foto
+              </button>
+              <input
+                id="notePhotoInput"
+                type="file"
+                accept="image/*"
+                class="hidden"
+                onchange="handleNotePhotoSelect(event)"
+              />
+            </div>
+            <div id="notePhotoPreviewWrap" class="hidden relative w-fit">
+              <img
+                id="notePhotoPreviewImg"
+                src=""
+                alt="Preview Foto Catatan"
+                class="max-h-36 rounded-xl border border-slate-200 object-cover"
+              />
+              <button
+                type="button"
+                onclick="clearNoteFormPhoto()"
+                class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-600 text-white flex items-center justify-center shadow-md hover:bg-rose-700"
+                title="Hapus Foto"
+              >
+                <svg
+                  class="w-3.5 h-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-2 flex justify-end gap-2">
+            <button
+              type="button"
+              onclick="closeNoteModal()"
+              class="py-2 px-4 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-100"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              class="py-2 px-5 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
+            >
+              Simpan Catatan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL: PANDUAN TEKNIS -->
+    <div
+      id="guideModal"
+      class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs"
+    >
+      <div
+        class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full max-h-[85vh] flex flex-col overflow-hidden"
+      >
+        <div
+          class="px-5 py-4 border-b border-slate-100 flex items-center justify-between"
+        >
+          <div>
+            <h3 id="guideModalTitle" class="font-bold text-slate-900 text-base">
+              Panduan Teknis
+            </h3>
+            <p id="guideModalSub" class="text-xs text-slate-500">
+              Referensi cepat kendaraan
+            </p>
+          </div>
+          <button
+            onclick="closeGuideModal()"
+            class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          id="guideModalBody"
+          class="p-5 overflow-y-auto space-y-4 text-xs sm:text-sm text-slate-600 leading-relaxed"
+        ></div>
+        <div
+          class="px-5 py-3.5 bg-slate-50 border-t border-slate-100 flex justify-end gap-2"
+        >
+          <button
+            onclick="askFromGuide()"
+            class="py-2 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition-colors"
+          >
+            Tanya Asisten AI
+          </button>
+          <button
+            onclick="closeGuideModal()"
+            class="py-2 px-4 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-medium transition-colors"
+          >
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Rename Session -->
+    <div
+      id="renameModal"
+      class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/35 backdrop-blur-xs"
+    >
+      <div
+        class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-5 space-y-4"
+      >
+        <h3 class="font-bold text-slate-900 text-sm">Ubah Judul Diskusi</h3>
+        <div>
+          <label class="block text-xs text-slate-500 mb-1.5"
+            >Tulis topik singkat</label
+          >
+          <input
+            id="renameInput"
+            type="text"
+            class="w-full px-3.5 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500"
+          />
+        </div>
+        <div class="flex justify-end gap-2">
+          <button
+            onclick="closeRenameModal()"
+            class="py-2 px-3.5 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-100"
+          >
+            Batal
+          </button>
+          <button
+            onclick="confirmRename()"
+            class="py-2 px-4 rounded-xl text-xs font-medium bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Confirm Delete -->
+    <div
+      id="deleteModal"
+      class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/35 backdrop-blur-xs"
+    >
+      <div
+        class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-sm w-full p-5 space-y-4"
+      >
+        <h3 id="deleteModalTitle" class="font-bold text-slate-900 text-sm">
+          Hapus Item?
+        </h3>
+        <p id="deleteModalDesc" class="text-xs text-slate-600 leading-relaxed">
+          Data ini akan dihapus permanen.
+        </p>
+        <div class="flex justify-end gap-2">
+          <button
+            onclick="closeDeleteModal()"
+            class="py-2 px-3.5 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-100"
+          >
+            Batal
+          </button>
+          <button
+            onclick="confirmDeleteItem()"
+            class="py-2 px-4 rounded-xl text-xs font-medium bg-rose-600 hover:bg-rose-700 text-white"
+          >
+            Hapus
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Restore Backup JSON -->
+    <div
+      id="restoreModal"
+      class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs"
+    >
+      <div
+        class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-5 space-y-4"
+      >
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <h3 class="font-bold text-slate-900 text-base">
+              Muat Backup JSON ke Cloud
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Data akan otomatis disinkronkan ke semua perangkat
+            </p>
+          </div>
+          <button
+            onclick="closeRestoreModal()"
+            class="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          id="restoreSummaryBox"
+          class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs text-slate-700 space-y-1"
+        ></div>
+        <div class="space-y-2">
+          <button
+            onclick="applyRestoreJson('merge')"
+            class="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition-colors text-left flex items-center justify-between"
+          >
+            <span>Gabungkan dengan Data Saat Ini (Disarankan)</span>
+            <span class="text-[10px] opacity-80 font-normal">Aman</span>
+          </button>
+          <button
+            onclick="applyRestoreJson('replace')"
+            class="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-rose-50 text-rose-700 border border-rose-200 text-xs font-semibold transition-colors text-left flex items-center justify-between"
+          >
+            <span>Timpa Semua Data Saat Ini</span>
+            <span class="text-[10px] opacity-75 font-normal">Reset</span>
+          </button>
+        </div>
+        <div class="flex justify-end">
+          <button
+            onclick="closeRestoreModal()"
+            class="py-1.5 px-3.5 rounded-xl text-xs font-medium text-slate-500 hover:bg-slate-100"
+          >
+            Batal
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Lightbox Preview Foto -->
+    <div
+      id="photoLightbox"
+      onclick="closePhotoLightbox()"
+      class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs cursor-zoom-out"
+    >
+      <div
+        class="relative max-w-3xl max-h-[88vh] flex flex-col items-center"
+        onclick="event.stopPropagation()"
+      >
+        <button
+          onclick="closePhotoLightbox()"
+          class="absolute -top-10 right-0 p-2 rounded-full bg-white/15 hover:bg-white/25 text-white transition-colors"
+          aria-label="Tutup Foto"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        <img
+          id="lightboxImg"
+          src=""
+          alt="Preview Foto"
+          class="max-w-full max-h-[82vh] rounded-2xl shadow-2xl border border-white/15 object-contain bg-slate-900"
+        />
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div
+      id="toast"
+      class="fixed bottom-5 right-5 z-50 px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-medium shadow-lg transform translate-y-16 opacity-0 transition-all duration-200 pointer-events-none"
+    >
+      Notifikasi
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        doc,
+        setDoc,
+        deleteDoc,
+        onSnapshot,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      /* =========================================================================
+       * 1. KONFIGURASI FIREBASE & VERCEL API
+       * ========================================================================= */
+      const firebaseConfig = {
+        apiKey: "AIzaSyCXiAktQRrCIaT9iWoHSYhl9Mih5sCFNZk",
+        authDomain: "garasi-pamikul.firebaseapp.com",
+        databaseURL: "https://garasi-pamikul-default-rtdb.firebaseio.com",
+        projectId: "garasi-pamikul",
+        storageBucket: "garasi-pamikul.firebasestorage.app",
+        messagingSenderId: "726402699554",
+        appId: "1:726402699554:web:617eee2ca81086515ad57b",
+      };
+
+      const GEMINI_MODEL = "gemini-2.5-flash";
+      const LS_PIN_KEY = "garasi_pamikul_pin_v1";
+      const LS_VEHICLES_KEY = "garasi_pamikul_vehicles_v1";
+      const LS_SESSIONS_KEY = "garasi_specialist_sessions_v3";
+      const LS_NOTES_KEY = "garasi_specialist_notes_v1";
+      const LS_ACTIVE_VEHICLE_KEY = "garasi_specialist_vehicle_v1";
+
+      const COLOR_STYLES = {
+        blue: {
+          badgeBg: "bg-blue-600",
+          pillClass: "bg-blue-50 text-blue-700 border-blue-200/80",
+        },
+        sky: {
+          badgeBg: "bg-sky-600",
+          pillClass: "bg-sky-50 text-sky-700 border-sky-200/80",
+        },
+        indigo: {
+          badgeBg: "bg-indigo-600",
+          pillClass: "bg-indigo-50 text-indigo-700 border-indigo-200/80",
+        },
+        emerald: {
+          badgeBg: "bg-emerald-600",
+          pillClass: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
+        },
+        amber: {
+          badgeBg: "bg-amber-600",
+          pillClass: "bg-amber-50 text-amber-700 border-amber-200/80",
+        },
+        rose: {
+          badgeBg: "bg-rose-600",
+          pillClass: "bg-rose-50 text-rose-700 border-rose-200/80",
+        },
+        red: {
+          badgeBg: "bg-red-600",
+          pillClass: "bg-red-50 text-red-700 border-red-200/80",
+        },
+        slate: {
+          badgeBg: "bg-slate-700",
+          pillClass: "bg-slate-100 text-slate-700 border-slate-200/80",
+        },
+      };
+
+      const DEFAULT_PARTS = {
+        Mobil: [
+          "Umum / Semua Bagian",
+          "Mesin & Injeksi / Karburator",
+          "Pengapian & Kelistrikan Mesin",
+          "Sistem Pendinginan (Radiator)",
+          "Transmisi & Kopling",
+          "Kaki-Kaki, Rem & Kemudi",
+          "Lampu, AC, Bodi & Interior",
+        ],
+        Motor: [
+          "Umum / Semua Bagian",
+          "Mesin & Injeksi / Karburator",
+          "CVT / Kopling & Rantai",
+          "Sistem Pendinginan (Radiator)",
+          "Kelistrikan, Aki & Starter",
+          "Kaki-Kaki, Shock & Rem",
+          "Lampu, Bodi & Aksesoris",
+        ],
+      };
+
+      const DEFAULT_VEHICLES = {
+        b13: {
+          id: "b13",
+          category: "Mobil",
+          shortName: "B13",
+          name: "Nissan Sentra Genesis B13 1996",
+          subtitle: "GA16DE 1.6L DOHC Injeksi (ECCS)",
+          colorKey: "blue",
+          photo: "",
+          parts: [
+            "Umum / Semua Bagian",
+            "Mesin & Injeksi (GA16DE / ECCS)",
+            "Pengapian & Kelistrikan Mesin",
+            "Sistem Pendinginan (Radiator)",
+            "Transmisi & Kopling",
+            "Kaki-Kaki, Rem & Kemudi",
+            "Lampu, AC, Bodi & Interior",
+          ],
+          expertProfile: `Nissan Sentra Genesis (B13) tahun 1996 versi Injeksi bermesin GA16DE 1.6L DOHC 16-Valve dengan sistem ECCS. Kuasai komponen khas GA16DE: AAC Valve/IACV, TPS, MAF Sensor di housing throttle body, Distributor/Delco dengan Optical Cam Angle Sensor, Fuel Pump, ECTS, Knock Sensor, dan Self-Diagnostic baca kedipan ECU manual.`,
+          guideTitle: "Panduan Kode ECU B13 (GA16DE)",
+          guideSub: "Mode Self-Diagnostic ECCS Nissan 1996",
+          guideAskText:
+            "Saya sudah cek kedipan ECU Nissan B13 saya dan muncul kode error: ",
+          guideHtml: `<div class="p-3.5 rounded-xl bg-blue-50/70 border border-blue-100 text-blue-900"><p class="font-semibold mb-1">Langkah Cepat Baca Kedipan (Mode II):</p><ol class="list-decimal pl-4 space-y-1 text-xs"><li>Putar kunci kontak ke posisi <strong>ON</strong> (mesin mati).</li><li>Cari kotak ECU di area konsol tengah bawah / dekat kaki penumpang depan.</li><li>Putar sekrup diagnostik searah jarum jam mentok, tunggu 2 detik, lalu putar balik mentok.</li><li>Hitung kedipan lampu <em>Check Engine</em>: <strong>lambat = puluhan</strong>, <strong>cepat = satuan</strong>.</li></ol></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs"><div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70"><span class="font-bold text-emerald-700">Kode 55:</span> Normal (Aman)</div><div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70"><span class="font-bold text-rose-700">Kode 11:</span> Cam Sensor (Delco)</div><div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70"><span class="font-bold text-rose-700">Kode 12:</span> MAF Sensor</div><div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70"><span class="font-bold text-rose-700">Kode 13:</span> Coolant Temp (ECTS)</div><div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70"><span class="font-bold text-rose-700">Kode 21:</span> Ignition Signal</div><div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70"><span class="font-bold text-rose-700">Kode 43:</span> TPS Sensor</div></div>`,
+          prompts: {
+            Perbaikan: [
+              {
+                title: "Idle Naik Turun / Drop Saat AC Nyala",
+                part: "Mesin & Injeksi (GA16DE / ECCS)",
+                cond: "Saat idle / langsam / macet",
+                text: "RPM idle Nissan B13 injeksi 1996 saya naik turun (hunting) dan langsung drop saat AC dinyalakan. Bagaimana cara cek AAC valve dan TPS?",
+              },
+              {
+                title: "Mesin Mati Mendadak Saat Panas",
+                part: "Pengapian & Kelistrikan Mesin",
+                cond: "Saat mesin sudah panas (suhu kerja)",
+                text: "Mesin GA16DE saya tiba-tiba mati saat sudah panas di kemacetan, lalu susah distarter sampai agak dingin. Apakah ini gejala delco/cam sensor?",
+              },
+            ],
+            Modifikasi: [
+              {
+                title: "Upgrade Lampu Depan & Relay Set",
+                part: "Lampu, AC, Bodi & Interior",
+                cond: "Umum / Tidak Spesifik",
+                text: "Saya mau modifikasi lampu depan Nissan B13 supaya lebih terang tapi aman untuk kelistrikan dan reflektor tua. Rekomendasi spek dan relay-nya?",
+              },
+            ],
+            Perawatan: [
+              {
+                title: "Checklist Tune-Up GA16DE",
+                part: "Mesin & Injeksi (GA16DE / ECCS)",
+                cond: "Umum / Tidak Spesifik",
+                text: "Berikan panduan tune-up berkala untuk Nissan B13 1996, termasuk spek oli mesin, busi, dan pembersihan throttle body.",
+              },
+            ],
+            "Cek Unit": [
+              {
+                title: "Titik Rawan Beli B13 1996",
+                part: "Umum / Semua Bagian",
+                cond: "Umum / Tidak Spesifik",
+                text: "Apa saja titik rawan mesin GA16DE, wiring ECCS, dan sasis yang wajib dicek pada Nissan B13 1996?",
+              },
+            ],
+          },
+        },
+        mio_z: {
+          id: "mio_z",
+          category: "Motor",
+          shortName: "Mio Z",
+          name: "Yamaha Mio Z",
+          subtitle: "125cc Blue Core Matic Injeksi",
+          colorKey: "sky",
+          photo: "",
+          parts: [
+            "Umum / Semua Bagian",
+            "Mesin & Injeksi (Blue Core / YMJET)",
+            "CVT (Roller, V-Belt, Kampas Ganda)",
+            "Kelistrikan, Aki & Starter",
+            "Kaki-Kaki, Shock & Rem",
+            "Lampu, Bodi & Aksesoris",
+          ],
+          expertProfile: `Yamaha Mio Z (125cc SOHC Blue Core Injeksi, basis 2PH). Penyakit khas: gredek CVT, roller peyang, tensioner keteng bunyi, fuel pump lemah, sensor TPS/ISC kotor, kode kedipan MIL Yamaha (12, 15, 37, 46), oli mesin 800ml & oli gardan 100ml.`,
+          guideTitle: "Panduan Cepat Yamaha Mio Z 125",
+          guideSub: "Spesifikasi Dasar & Kode Kedipan MIL Yamaha",
+          guideAskText:
+            "Lampu indikator mesin (MIL) Yamaha Mio Z saya berkedip kode: ",
+          guideHtml: `<div class="p-3.5 rounded-xl bg-sky-50/80 border border-sky-100 text-sky-900"><p class="font-semibold mb-1">Spesifikasi Servis Dasar Mio Z (2PH):</p><ul class="list-disc pl-4 space-y-1 text-xs"><li><strong>Oli Mesin:</strong> 0,8 Liter (800 ml) — SAE 10W-40 JASO MB.</li><li><strong>Oli Gardan:</strong> 100 ml.</li><li><strong>Busi:</strong> NGK CR6HSA / Denso U20FSR-U.</li></ul></div>`,
+          prompts: {
+            Perbaikan: [
+              {
+                title: "CVT Gredek & Tarikan Awal Berat",
+                part: "CVT (Roller, V-Belt, Kampas Ganda)",
+                cond: "Saat akselerasi / tarikan awal / tanjakan",
+                text: "Yamaha Mio Z saya terasa gredek dan bergetar di tarikan awal. Bagian CVT mana saja yang harus dicek?",
+              },
+            ],
+          },
+        },
+        revo_07: {
+          id: "revo_07",
+          category: "Motor",
+          shortName: "Revo 07",
+          name: "Honda Revo 2007",
+          subtitle: "100cc Bebek Karburator (Revo Lancip)",
+          colorKey: "rose",
+          photo: "",
+          parts: [
+            "Umum / Semua Bagian",
+            "Mesin & Karburator (100cc C-Series)",
+            "Pengapian, CDI, Spul & Kelistrikan",
+            "Kopling, Transmisi & Rantai/Gear",
+            "Kaki-Kaki, Shock & Rem",
+            "Lampu & Bodi",
+          ],
+          expertProfile: `Honda Revo 100cc tahun 2007 (Revo Lancip, mesin C-Series 97,1cc karburator). Penyakit khas: karburator banjir/brebet/setting angin, karet intake bocor, kampas kopling & ganda selip, rantai keteng bunyi.`,
+          guideTitle: "Panduan Cepat Honda Revo 2007",
+          guideSub: "Spesifikasi Dasar Mesin 100cc Karburator",
+          guideAskText: "Honda Revo 2007 saya mengalami kendala pada bagian: ",
+          guideHtml: `<div class="p-3.5 rounded-xl bg-rose-50/80 border border-rose-100 text-rose-900"><p class="font-semibold mb-1">Spesifikasi Servis Dasar Revo 100 (2007):</p><ul class="list-disc pl-4 space-y-1 text-xs"><li><strong>Oli Mesin:</strong> 0,8 Liter — SAE 10W-30 / 20W-40 JASO MA.</li><li><strong>Busi:</strong> NGK C6HSA / Denso U20FS-U.</li></ul></div>`,
+          prompts: {
+            Perbaikan: [
+              {
+                title: "Karburator Brebet & Susah Langsam",
+                part: "Mesin & Karburator (100cc C-Series)",
+                cond: "Saat idle / langsam / macet",
+                text: "Honda Revo 2007 saya sering brebet dan mesin mati saat lepas gas. Bagaimana cara membersihkan dan menyetel karburatornya?",
+              },
+            ],
+          },
+        },
+        cb150_17: {
+          id: "cb150_17",
+          category: "Motor",
+          shortName: "CB150R 17",
+          name: "Honda CB150R 2017",
+          subtitle: "150cc DOHC 6-Speed PGM-FI (K15G)",
+          colorKey: "red",
+          photo: "",
+          parts: [
+            "Umum / Semua Bagian",
+            "Mesin DOHC & Injeksi (PGM-FI)",
+            "Sistem Pendinginan (Radiator)",
+            "Kopling, Transmisi 6-Speed & Rantai",
+            "Kelistrikan, Aki & Panel Speedometer",
+            "Kaki-Kaki, Pro-Link, Rem & Bodi",
+          ],
+          expertProfile: `Honda All New CB150R StreetFire 2017 (K15G, 150cc DOHC 6-Speed radiator PGM-FI). Penyakit khas: tensioner rantai keteng bunyi klotok, komstir oblak, seal water pump rembes, sensor TPS/O2, kipas radiator.`,
+          guideTitle: "Panduan Cepat CB150R 2017 (K15G)",
+          guideSub: "Spesifikasi Dasar & Kode Kedipan MIL PGM-FI",
+          guideAskText:
+            "Lampu MIL di speedometer Honda CB150R 2017 saya berkedip kode: ",
+          guideHtml: `<div class="p-3.5 rounded-xl bg-red-50/80 border border-red-100 text-red-900"><p class="font-semibold mb-1">Spesifikasi Servis Dasar CB150R 2017:</p><ul class="list-disc pl-4 space-y-1 text-xs"><li><strong>Oli Mesin:</strong> 1,1 Liter — SAE 10W-30 / 10W-40 JASO MA2.</li><li><strong>Busi:</strong> NGK MR9C-9N.</li></ul></div>`,
+          prompts: {
+            Perbaikan: [
+              {
+                title: "Mesin Bunyi Klotok (Tensioner Keteng)",
+                part: "Mesin DOHC & Injeksi (PGM-FI)",
+                cond: "Saat mesin sudah panas (suhu kerja)",
+                text: "Mesin CB150R 2017 saya muncul bunyi klotok-klotok saat langsam. Apakah ini masalah tensioner keteng khas K15G?",
+              },
+            ],
+          },
+        },
+        vario_07: {
+          id: "vario_07",
+          category: "Motor",
+          shortName: "Vario 07",
+          name: "Honda Vario Karbu 2007",
+          subtitle: "110cc Matic Karburator Radiator (KVB)",
+          colorKey: "amber",
+          photo: "",
+          parts: [
+            "Umum / Semua Bagian",
+            "Mesin & Karburator Vakum (KVB)",
+            "Sistem Pendinginan (Radiator & Water Pump)",
+            "CVT (Roller, V-Belt, Kampas Ganda)",
+            "Kelistrikan, Aki & Starter",
+            "Kaki-Kaki, Rem & Bodi",
+          ],
+          expertProfile: `Honda Vario 110 Karburator 2007 (KVB Gen 1, radiator, karbu vakum Keihin VK22). Penyakit khas: overheat radiator, seal water pump bocor, thermostat macet, karet membran karbu vakum robek, auto choke, CVT gredek.`,
+          guideTitle: "Panduan Cepat Vario Karbu 2007",
+          guideSub: "Spesifikasi Dasar Vario 110 KVB Radiator",
+          guideAskText: "Honda Vario Karbu 2007 saya mengalami gejala: ",
+          guideHtml: `<div class="p-3.5 rounded-xl bg-amber-50/80 border border-amber-100 text-amber-900"><p class="font-semibold mb-1">Spesifikasi Servis Dasar Vario 110 Karbu:</p><ul class="list-disc pl-4 space-y-1 text-xs"><li><strong>Oli Mesin:</strong> 0,7 – 0,8 Liter — SAE 10W-30 JASO MB.</li><li><strong>Oli Gardan:</strong> 120 ml.</li><li><strong>Busi:</strong> NGK CR7EH-9 / Denso U22FER9.</li></ul></div>`,
+          prompts: {
+            Perbaikan: [
+              {
+                title: "Indikator Radiator Menyala / Overheat",
+                part: "Sistem Pendinginan (Radiator & Water Pump)",
+                cond: "Saat mesin sudah panas (suhu kerja)",
+                text: "Lampu indikator suhu merah di Vario Karbu 2007 saya menyala saat macet. Bagaimana urutan cek radiator dan seal water pump?",
+              },
+            ],
+          },
+        },
+        vixion_17: {
+          id: "vixion_17",
+          category: "Motor",
+          shortName: "Vixion 17",
+          name: "Yamaha Vixion 2017",
+          subtitle: "150cc SOHC Injeksi Radiator",
+          colorKey: "indigo",
+          photo: "",
+          parts: [
+            "Umum / Semua Bagian",
+            "Mesin SOHC & Injeksi (Fuel Injection)",
+            "Sistem Pendinginan (Radiator)",
+            "Kopling, Transmisi & Rantai/Gear",
+            "Kelistrikan, Aki & Speedometer",
+            "Kaki-Kaki, Monoshock, Rem & Bodi",
+          ],
+          expertProfile: `Yamaha Vixion 2017 (150cc SOHC 4-Valve DiASil Cylinder, radiator, injeksi Yamaha). Penyakit khas: komstir jedug, fuel pump lemah, sensor O2/TPS, kipas radiator, seal water pump, kode kedipan MIL Yamaha.`,
+          guideTitle: "Panduan Cepat Yamaha Vixion 2017",
+          guideSub: "Spesifikasi Dasar & Kode Kedipan MIL Yamaha",
+          guideAskText:
+            "Lampu indikator mesin Yamaha Vixion 2017 saya berkedip kode: ",
+          guideHtml: `<div class="p-3.5 rounded-xl bg-indigo-50/80 border border-indigo-100 text-indigo-900"><p class="font-semibold mb-1">Spesifikasi Servis Dasar Vixion 2017:</p><ul class="list-disc pl-4 space-y-1 text-xs"><li><strong>Oli Mesin:</strong> 0,85 – 1,0 Liter — SAE 10W-40 JASO MA2.</li><li><strong>Busi:</strong> NGK CR8E / Denso U24ESR-N.</li></ul></div>`,
+          prompts: {
+            Perbaikan: [
+              {
+                title: "Brebet Saat Digas / Fuel Pump Lemah",
+                part: "Mesin SOHC & Injeksi (Fuel Injection)",
+                cond: "Saat akselerasi / tarikan awal / tanjakan",
+                text: "Yamaha Vixion 2017 saya terasa brebet saat ditarik gas spontan. Bagaimana cara cek tekanan fuel pump dan filter bensin?",
+              },
+            ],
+          },
+        },
+      };
+
+      const MODES = [
+        {
+          id: "Perbaikan",
+          label: "Perbaikan",
+          activeClass:
+            "bg-blue-600 text-white border border-blue-600 shadow-xs",
+          inactiveClass:
+            "bg-white text-blue-700 border border-blue-300/90 hover:bg-blue-50 hover:border-blue-400 shadow-2xs",
+          badgeClass: "bg-blue-50 text-blue-700 border-blue-200",
+        },
+        {
+          id: "Modifikasi",
+          label: "Modifikasi",
+          activeClass:
+            "bg-indigo-600 text-white border border-indigo-600 shadow-xs",
+          inactiveClass:
+            "bg-white text-indigo-700 border border-indigo-300/90 hover:bg-indigo-50 hover:border-indigo-400 shadow-2xs",
+          badgeClass: "bg-indigo-50 text-indigo-700 border-indigo-200",
+        },
+        {
+          id: "Perawatan",
+          label: "Perawatan",
+          activeClass:
+            "bg-emerald-600 text-white border border-emerald-600 shadow-xs",
+          inactiveClass:
+            "bg-white text-emerald-700 border border-emerald-300/90 hover:bg-emerald-50 hover:border-emerald-400 shadow-2xs",
+          badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
+        },
+        {
+          id: "Cek Unit",
+          label: "Cek Unit",
+          activeClass:
+            "bg-amber-600 text-white border border-amber-600 shadow-xs",
+          inactiveClass:
+            "bg-white text-amber-800 border border-amber-300/90 hover:bg-amber-50 hover:border-amber-400 shadow-2xs",
+          badgeClass: "bg-amber-50 text-amber-700 border-amber-200",
+        },
+      ];
+
+      const NOTE_CATEGORY_BADGES = {
+        "Kejadian / Keluhan": "bg-rose-50 text-rose-700 border-rose-200",
+        "Servis & Oli": "bg-emerald-50 text-emerald-700 border-emerald-200",
+        "Ganti Sparepart": "bg-blue-50 text-blue-700 border-blue-200",
+        Modifikasi: "bg-indigo-50 text-indigo-700 border-indigo-200",
+        "Pengingat / Lainnya": "bg-amber-50 text-amber-700 border-amber-200",
+      };
+
+      /* =========================================================================
+       * 2. STATE APLIKASI
+       * ========================================================================= */
+      let fbApp = null;
+      let db = null;
+      let unsubscribeSessions = null;
+      let unsubscribeNotes = null;
+      let unsubscribeVehicles = null;
+
+      let savedPin = "";
+      let vehicles = {};
+      let activeVehicleId = "b13";
+      let activeView = "chat";
+      let sessions = [];
+      let activeSessionId = null;
+      let notes = [];
+      let activeFilterMode = "Semua";
+      let notesScope = "active";
+      let vehicleCategoryFilter = "Semua";
+      let isGenerating = false;
+      let deleteTarget = null;
+      let pendingRestoreData = null;
+
+      let pendingChatPhoto = null;
+      let pendingNotePhoto = "";
+      let pendingVehiclePhoto = "";
+
+      function getVehicleStyle(v) {
+        return COLOR_STYLES[v?.colorKey] || COLOR_STYLES.blue;
+      }
+
+      function getActiveVehicle() {
+        if (vehicles[activeVehicleId]) return vehicles[activeVehicleId];
+        const firstKey = Object.keys(vehicles)[0];
+        if (firstKey) {
+          activeVehicleId = firstKey;
+          return vehicles[firstKey];
+        }
+        vehicles = structuredClone(DEFAULT_VEHICLES);
+        activeVehicleId = "b13";
+        return vehicles.b13;
+      }
+
+      function buildSystemInstruction(vehicle) {
+        return `Anda adalah Garasi Pamikul, asisten mekanik otomotif yang sangat ahli, ramah, dan terpercaya.
+Saat ini pengguna sedang berdiskusi khusus mengenai kendaraan:
+- **Kategori:** ${vehicle.category}
+- **Model:** ${vehicle.name}
+- **Spesifikasi Utama:** ${vehicle.subtitle}
+- **Pengetahuan Khusus Kendaraan Ini:** ${vehicle.expertProfile || `Kuasai karakter teknis, perawatan, dan troubleshooting untuk ${vehicle.name} (${vehicle.subtitle}).`}
+
+ATURAN JAWABAN:
+1. Fokus 100% akurat pada karakter dan spesifikasi ${vehicle.name}. Jika pengguna mengunggah foto, analisa kondisi visual di foto tersebut dengan teliti (kebocoran, warna busi, karat, kode indikator, kabel, dll).
+2. Berbahasa Indonesia yang ramah, lugas, terstruktur, dan terasa seperti mekanik kepercayaan.
+3. Sesuaikan gaya jawaban dengan Mode pengguna:
+   - **Perbaikan**: 1) Kemungkinan Penyebab Utama, 2) Urutan Cek Mandiri (dari termudah/termurah), 3) Catatan Bengkel & Keamanan.
+   - **Modifikasi**: 1) Rekomendasi Opsi Upgrade yang proporsional, 2) Dampak & Keamanan, 3) Tips Pemasangan.
+   - **Perawatan**: Panduan langkah praktis, spek oli/part yang tepat, dan interval servis.
+   - **Cek Unit**: Checklist inspeksi terstruktur, titik rawan (red flags), dan info persamaan part.
+4. Gunakan format Markdown yang rapi (judul singkat, poin bullet, dan **tebal** pada komponen penting).`;
+      }
+
+      /* =========================================================================
+       * 3. PROTEKSI PIN (VERIFIKASI VIA VERCEL /api/chat)
+       * ========================================================================= */
+      async function verifyPinWithServer(pin) {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-app-pin": pin },
+          body: JSON.stringify({ action: "verify_pin", pin }),
+        });
+        return res.ok;
+      }
+
+      async function handlePinSubmit(e) {
+        e.preventDefault();
+        const input = document.getElementById("pinInput");
+        const errEl = document.getElementById("pinErrorText");
+        const btn = document.getElementById("pinSubmitBtn");
+        const pin = input.value.trim();
+        if (!pin) return;
+
+        btn.disabled = true;
+        btn.textContent = "Memeriksa PIN...";
+        errEl.classList.add("hidden");
+
+        try {
+          const ok = await verifyPinWithServer(pin);
+          if (ok) {
+            savedPin = pin;
+            localStorage.setItem(LS_PIN_KEY, pin);
+            document.getElementById("pinOverlay").classList.add("hidden");
+            input.value = "";
+            connectFirestore();
+            showToast("Selamat datang di Garasi Pamikul!");
+          } else {
+            errEl.textContent = "PIN salah. Silakan coba lagi.";
+            errEl.classList.remove("hidden");
+            input.select();
+          }
+        } catch {
+          errEl.textContent = "Gagal terhubung ke server Vercel (/api/chat).";
+          errEl.classList.remove("hidden");
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Buka Garasi";
+        }
+      }
+
+      function lockApp() {
+        savedPin = "";
+        localStorage.removeItem(LS_PIN_KEY);
+        document.getElementById("pinOverlay").classList.remove("hidden");
+        document.getElementById("pinInput").focus();
+        closeAllDrawers();
+      }
+
+      /* =========================================================================
+       * 4. KOMPRESI FOTO
+       * ========================================================================= */
+      function compressImageFile(file, maxWidth = 800, quality = 0.72) {
+        return new Promise((resolve, reject) => {
+          if (!file || !file.type.startsWith("image/")) {
+            reject(new Error("File harus berupa gambar."));
+            return;
+          }
+          const reader = new FileReader();
+          reader.onerror = () =>
+            reject(new Error("Gagal membaca file gambar."));
+          reader.onload = (e) => {
+            const img = new Image();
+            img.onerror = () =>
+              reject(new Error("Format gambar tidak didukung."));
+            img.onload = () => {
+              let w = img.width,
+                h = img.height;
+              if (w > maxWidth) {
+                h = Math.round((h * maxWidth) / w);
+                w = maxWidth;
+              }
+              const canvas = document.createElement("canvas");
+              canvas.width = w;
+              canvas.height = h;
+              const ctx = canvas.getContext("2d");
+              ctx.fillStyle = "#ffffff";
+              ctx.fillRect(0, 0, w, h);
+              ctx.drawImage(img, 0, 0, w, h);
+              resolve(canvas.toDataURL("image/jpeg", quality));
+            };
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function extractBase64Parts(dataUrl) {
+        const match = /^data:([^;]+);base64,(.+)$/.exec(dataUrl || "");
+        return match ? { mimeType: match[1], data: match[2] } : null;
+      }
+
+      /* =========================================================================
+       * 5. PENYIMPANAN LOKAL & SINKRONISASI FIRESTORE (MULTI-DEVICE)
+       * ========================================================================= */
+      function setSyncStatus(text, tone = "neutral") {
+        const el = document.getElementById("syncStatusText");
+        if (!el) return;
+        el.textContent = text;
+        el.className =
+          "text-[10px] truncate " +
+          (tone === "ok"
+            ? "text-emerald-600 font-medium"
+            : tone === "error"
+              ? "text-rose-500 font-medium"
+              : "text-slate-400");
+      }
+
+      function saveAllToLocal() {
+        try {
+          localStorage.setItem(LS_VEHICLES_KEY, JSON.stringify(vehicles));
+          localStorage.setItem(LS_ACTIVE_VEHICLE_KEY, activeVehicleId);
+          localStorage.setItem(LS_SESSIONS_KEY, JSON.stringify(sessions));
+          localStorage.setItem(LS_NOTES_KEY, JSON.stringify(notes));
+        } catch {}
+      }
+
+      function cleanLegacySessionTitle(session) {
+        if (!session || !session.title) return "Sesi Baru";
+        const v = vehicles[session.vehicleId] || getActiveVehicle();
+        const prefix = `${v.shortName} - ${session.mode} - `;
+        return session.title.startsWith(prefix)
+          ? session.title.slice(prefix.length).trim() || "Sesi Baru"
+          : session.title;
+      }
+
+      function loadAllFromLocal() {
+        vehicles = structuredClone(DEFAULT_VEHICLES);
+        try {
+          const rawVehicles = localStorage.getItem(LS_VEHICLES_KEY);
+          if (rawVehicles) {
+            const parsedV = JSON.parse(rawVehicles);
+            if (
+              parsedV &&
+              typeof parsedV === "object" &&
+              Object.keys(parsedV).length > 0
+            )
+              vehicles = parsedV;
+          }
+          const savedVehicle = localStorage.getItem(LS_ACTIVE_VEHICLE_KEY);
+          activeVehicleId =
+            savedVehicle && vehicles[savedVehicle]
+              ? savedVehicle
+              : Object.keys(vehicles)[0];
+
+          const rawSessions = localStorage.getItem(LS_SESSIONS_KEY);
+          if (rawSessions) {
+            const parsed = JSON.parse(rawSessions);
+            if (Array.isArray(parsed)) {
+              sessions = parsed.map((s) => {
+                const norm = {
+                  ...s,
+                  vehicleId:
+                    s.vehicleId && vehicles[s.vehicleId]
+                      ? s.vehicleId
+                      : activeVehicleId,
+                };
+                norm.title = cleanLegacySessionTitle(norm);
+                return norm;
+              });
+            }
+          }
+          const rawNotes = localStorage.getItem(LS_NOTES_KEY);
+          if (rawNotes) {
+            const parsedNotes = JSON.parse(rawNotes);
+            if (Array.isArray(parsedNotes)) notes = parsedNotes;
+          }
+        } catch {}
+      }
+
+      function updateTodayDateDisplay() {
+        const el = document.getElementById("todayDateText");
+        if (!el) return;
+        try {
+          el.textContent = new Date().toLocaleDateString("id-ID", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          });
+        } catch {
+          el.textContent = new Date().toLocaleDateString("id-ID");
+        }
+      }
+
+      async function initApp() {
+        loadAllFromLocal();
+        updateTodayDateDisplay();
+        populateNoteVehicleSelect();
+        renderModeSelector();
+        renderHistoryFilters();
+        updateVehicleUI();
+        updateBadges();
+
+        ensureSessionForActiveVehicle(false);
+        syncControlsWithActiveSession();
+        renderRightPanel();
+        renderChatArea(false);
+        renderNotesList();
+        renderVehiclesGrid();
+
+        // Cek PIN tersimpan
+        const storedPin = localStorage.getItem(LS_PIN_KEY);
+        if (storedPin) {
+          try {
+            const ok = await verifyPinWithServer(storedPin);
+            if (ok) {
+              savedPin = storedPin;
+              document.getElementById("pinOverlay").classList.add("hidden");
+              connectFirestore();
+              return;
+            }
+          } catch {}
+        }
+        document.getElementById("pinOverlay").classList.remove("hidden");
+        document.getElementById("pinInput").focus();
+      }
+
+      function connectFirestore() {
+        if (db) return;
+        try {
+          fbApp = initializeApp(firebaseConfig);
+          db = getFirestore(fbApp);
+
+          if (unsubscribeVehicles) unsubscribeVehicles();
+          if (unsubscribeSessions) unsubscribeSessions();
+          if (unsubscribeNotes) unsubscribeNotes();
+
+          unsubscribeVehicles = onSnapshot(
+            collection(db, "garasi_pamikul_vehicles"),
+            (snapshot) => {
+              if (!snapshot.empty) {
+                const cloudVeh = {};
+                snapshot.forEach((docSnap) => {
+                  const data = docSnap.data();
+                  if (data && data.id) cloudVeh[data.id] = data;
+                });
+                if (Object.keys(cloudVeh).length > 0) {
+                  vehicles = { ...vehicles, ...cloudVeh };
+                  saveAllToLocal();
+                  populateNoteVehicleSelect();
+                  updateVehicleUI();
+                  updateBadges();
+                  renderRightPanel();
+                  if (activeView === "vehicles") renderVehiclesGrid();
+                }
+              }
+              setSyncStatus("Cloud Firestore aktif ✓", "ok");
+            },
+            () => setSyncStatus("Mode lokal (cek Firestore Rules)", "error"),
+          );
+
+          unsubscribeSessions = onSnapshot(
+            collection(db, "garasi_pamikul_sessions"),
+            (snapshot) => {
+              const cloudSessions = [];
+              snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                if (data && data.id) {
+                  const norm = {
+                    ...data,
+                    vehicleId:
+                      data.vehicleId && vehicles[data.vehicleId]
+                        ? data.vehicleId
+                        : activeVehicleId,
+                  };
+                  norm.title = cleanLegacySessionTitle(norm);
+                  cloudSessions.push(norm);
+                }
+              });
+              if (cloudSessions.length > 0) {
+                sessions = cloudSessions.sort(
+                  (a, b) => (b.updatedAt || 0) - (a.updatedAt || 0),
+                );
+                saveAllToLocal();
+                if (
+                  !activeSessionId ||
+                  !sessions.some((s) => s.id === activeSessionId)
+                )
+                  ensureSessionForActiveVehicle(false);
+                syncControlsWithActiveSession();
+                renderRightPanel();
+                if (!isGenerating && activeView === "chat")
+                  renderChatArea(false);
+              }
+              setSyncStatus("Cloud Firestore aktif ✓", "ok");
+            },
+            () => {},
+          );
+
+          unsubscribeNotes = onSnapshot(
+            collection(db, "garasi_pamikul_notes"),
+            (snapshot) => {
+              const cloudNotes = [];
+              snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                if (data && data.id) cloudNotes.push(data);
+              });
+              if (cloudNotes.length > 0) {
+                notes = cloudNotes.sort(
+                  (a, b) => (b.updatedAt || 0) - (a.updatedAt || 0),
+                );
+                saveAllToLocal();
+                updateBadges();
+                renderRightPanel();
+                if (activeView === "notes") renderNotesList();
+              }
+            },
+            () => {},
+          );
+        } catch {
+          setSyncStatus("Tersimpan lokal di browser", "error");
+        }
+      }
+
+      async function saveVehicleRecord(vehicleObj) {
+        saveAllToLocal();
+        if (!db || !vehicleObj) return;
+        try {
+          await setDoc(
+            doc(db, "garasi_pamikul_vehicles", vehicleObj.id),
+            vehicleObj,
+            { merge: true },
+          );
+        } catch {}
+      }
+
+      async function deleteVehicleRecord(vehicleId) {
+        saveAllToLocal();
+        if (!db || !vehicleId) return;
+        try {
+          await deleteDoc(doc(db, "garasi_pamikul_vehicles", vehicleId));
+        } catch {}
+      }
+
+      async function saveSession(session) {
+        saveAllToLocal();
+        if (!db || !session) return;
+        try {
+          await setDoc(
+            doc(db, "garasi_pamikul_sessions", session.id),
+            session,
+            { merge: true },
+          );
+        } catch {}
+      }
+
+      async function deleteSessionRecord(sessionId) {
+        saveAllToLocal();
+        if (!db || !sessionId) return;
+        try {
+          await deleteDoc(doc(db, "garasi_pamikul_sessions", sessionId));
+        } catch {}
+      }
+
+      async function saveNoteRecord(note) {
+        saveAllToLocal();
+        if (!db || !note) return;
+        try {
+          await setDoc(doc(db, "garasi_pamikul_notes", note.id), note, {
+            merge: true,
+          });
+        } catch {}
+      }
+
+      async function deleteNoteRecord(noteId) {
+        saveAllToLocal();
+        if (!db || !noteId) return;
+        try {
+          await deleteDoc(doc(db, "garasi_pamikul_notes", noteId));
+        } catch {}
+      }
+
+      /* =========================================================================
+       * 6. NAVIGASI, UI KENDARAAN & DRAWER
+       * ========================================================================= */
+      function updateBadges() {
+        const notesBadge = document.getElementById("notesCountBadge");
+        if (notesBadge) notesBadge.textContent = notes.length;
+        const vehBadge = document.getElementById("vehiclesCountBadge");
+        if (vehBadge) vehBadge.textContent = Object.keys(vehicles).length;
+      }
+
+      function updateVehicleUI() {
+        const v = getActiveVehicle();
+        const style = getVehicleStyle(v);
+        const thumb = document.getElementById("leftVehicleThumb");
+
+        if (v.photo) {
+          thumb.className =
+            "w-10 h-10 rounded-xl bg-slate-100 shrink-0 shadow-xs overflow-hidden border border-slate-200";
+          thumb.innerHTML = `<img src="${v.photo}" alt="${escapeHtml(v.shortName)}" class="w-full h-full object-cover">`;
+        } else {
+          thumb.className = `w-10 h-10 rounded-xl ${style.badgeBg} text-white flex items-center justify-center font-bold text-[10px] shrink-0 shadow-xs text-center leading-tight px-1`;
+          thumb.textContent = v.shortName.slice(0, 8);
+        }
+
+        document.getElementById("leftVehicleCategory").textContent = v.category;
+        document.getElementById("leftVehicleName").textContent = v.name;
+        document.getElementById("leftVehicleSub").textContent = v.subtitle;
+        document.getElementById("sidebarGuideLabel").textContent =
+          `Panduan ${v.shortName}`;
+        document.getElementById("centerVehicleTag").textContent = v.name;
+        document.getElementById("inputFooterSpec").textContent =
+          `Aktif: ${v.name} (${v.subtitle})`;
+
+        const parts =
+          Array.isArray(v.parts) && v.parts.length > 0
+            ? v.parts
+            : DEFAULT_PARTS[v.category] || DEFAULT_PARTS.Mobil;
+        document.getElementById("partSelect").innerHTML = parts
+          .map(
+            (p) => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`,
+          )
+          .join("");
+      }
+
+      function switchView(view) {
+        activeView = view;
+        const views = {
+          chat: document.getElementById("chatView"),
+          notes: document.getElementById("notesView"),
+          vehicles: document.getElementById("vehiclesView"),
+        };
+        const tabs = {
+          chat: document.getElementById("mainTabChat"),
+          notes: document.getElementById("mainTabNotes"),
+          vehicles: document.getElementById("mainTabVehicles"),
+        };
+
+        Object.entries(tabs).forEach(([k, btn]) => {
+          btn.className =
+            k === view
+              ? "px-3 sm:px-4 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all bg-white text-blue-700 shadow-xs whitespace-nowrap"
+              : "px-3 sm:px-4 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all text-slate-600 hover:text-slate-900 whitespace-nowrap";
+        });
+
+        Object.values(views).forEach((el) => {
+          el.classList.add("hidden");
+          el.classList.remove("flex");
+        });
+        views[view].classList.remove("hidden");
+        views[view].classList.add("flex");
+
+        const renameBtn = document.getElementById("renameTitleBtn");
+        const copyBtn = document.getElementById("headerCopyChatBtn");
+
+        if (view === "chat") {
+          renameBtn.classList.remove("hidden");
+          copyBtn.classList.remove("hidden");
+          const session = getActiveSession();
+          document.getElementById("activeHeaderTitle").textContent = session
+            ? session.title
+            : "Sesi Baru";
+          renderChatArea(isGenerating);
+        } else if (view === "notes") {
+          renameBtn.classList.add("hidden");
+          copyBtn.classList.add("hidden");
+          document.getElementById("activeHeaderTitle").textContent =
+            "Catatan & Logbook Kejadian";
+          renderNotesList();
+        } else {
+          renameBtn.classList.add("hidden");
+          copyBtn.classList.add("hidden");
+          document.getElementById("activeHeaderTitle").textContent =
+            "Daftar Kendaraan Garasi";
+          renderVehiclesGrid();
+        }
+
+        document.getElementById("rightPanelSearch").value = "";
+        renderRightPanel();
+        closeAllDrawers();
+      }
+
+      function toggleLeftPanel(open) {
+        const panel = document.getElementById("leftPanel"),
+          backdrop = document.getElementById("drawerBackdrop");
+        if (open) {
+          toggleRightPanel(false);
+          panel.classList.remove("-translate-x-full");
+          backdrop.classList.remove("hidden");
+        } else {
+          panel.classList.add("-translate-x-full");
+          backdrop.classList.add("hidden");
+        }
+      }
+      function toggleRightPanel(open) {
+        const panel = document.getElementById("rightPanel"),
+          backdrop = document.getElementById("drawerBackdrop");
+        if (open) {
+          document
+            .getElementById("leftPanel")
+            .classList.add("-translate-x-full");
+          panel.classList.remove("translate-x-full");
+          backdrop.classList.remove("hidden");
+        } else {
+          panel.classList.add("translate-x-full");
+          backdrop.classList.add("hidden");
+        }
+      }
+      function closeAllDrawers() {
+        document.getElementById("leftPanel").classList.add("-translate-x-full");
+        document.getElementById("rightPanel").classList.add("translate-x-full");
+        document.getElementById("drawerBackdrop").classList.add("hidden");
+      }
+
+      /* =========================================================================
+       * 7. CRUD DAFTAR KENDARAAN
+       * ========================================================================= */
+      function setVehicleFilter(cat) {
+        vehicleCategoryFilter = cat;
+        ["Semua", "Mobil", "Motor"].forEach((c) => {
+          const btn = document.getElementById("vehFilter" + c);
+          if (btn)
+            btn.className =
+              c === cat
+                ? "px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-900 shadow-2xs transition-all"
+                : "px-3 py-1 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
+        });
+        renderVehiclesGrid();
+      }
+
+      function renderVehiclesGrid() {
+        const container = document.getElementById("vehiclesGridContainer");
+        if (!container) return;
+        const list = Object.values(vehicles).filter(
+          (v) =>
+            vehicleCategoryFilter === "Semua" ||
+            v.category === vehicleCategoryFilter,
+        );
+
+        container.innerHTML = list
+          .map((v) => {
+            const style = getVehicleStyle(v);
+            const isActive = v.id === activeVehicleId;
+            const chatCount = sessions.filter(
+              (s) => s.vehicleId === v.id,
+            ).length;
+            const noteCount = notes.filter((n) => n.vehicleId === v.id).length;
+            const thumbHtml = v.photo
+              ? `<img src="${v.photo}" onclick="openPhotoLightbox('${v.photo}')" alt="${escapeHtml(v.name)}" class="w-16 h-16 rounded-xl object-cover border border-slate-200 shrink-0 cursor-zoom-in">`
+              : `<div class="w-16 h-16 rounded-xl ${style.badgeBg} text-white flex items-center justify-center font-extrabold text-xs shrink-0 text-center px-1 shadow-xs">${escapeHtml(v.shortName)}</div>`;
+
+            return `
+                    <article class="bg-white rounded-2xl border p-4 flex flex-col justify-between gap-3 transition-all shadow-2xs ${isActive ? "border-blue-400 ring-2 ring-blue-500/15" : "border-slate-200/90 hover:border-slate-300"}">
+                        <div class="flex items-start gap-3">
+                            ${thumbHtml}
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold border ${style.pillClass}">${escapeHtml(v.category)}</span>
+                                    ${isActive ? '<span class="px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-bold">Sedang Aktif</span>' : ""}
+                                </div>
+                                <h4 class="font-bold text-slate-900 text-sm mt-1 truncate">${escapeHtml(v.name)}</h4>
+                                <p class="text-xs text-slate-500 truncate">${escapeHtml(v.subtitle)}</p>
+                                <p class="text-[11px] text-slate-400 mt-1.5 font-medium">${chatCount} diskusi • ${noteCount} catatan</p>
+                            </div>
+                        </div>
+                        <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <button onclick="selectVehicle('${v.id}')" class="py-1.5 px-3 rounded-xl text-xs font-semibold transition-colors ${isActive ? "bg-blue-50 text-blue-700" : "bg-slate-900 hover:bg-slate-800 text-white"}">
+                                ${isActive ? "Aktif Dipakai" : "Pilih Kendaraan"}
+                            </button>
+                            <div class="flex items-center gap-1">
+                                <button onclick="openVehicleFormModal('${v.id}')" class="py-1.5 px-2.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-blue-700 hover:bg-blue-50 transition-colors">Edit</button>
+                                <button onclick="openDeleteModal('vehicle', '${v.id}')" class="py-1.5 px-2.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors">Hapus</button>
+                            </div>
+                        </div>
+                    </article>`;
+          })
+          .join("");
+      }
+
+      function openVehicleModal() {
+        const body = document.getElementById("vehicleModalBody");
+        const mobilList = Object.values(vehicles).filter(
+          (v) => v.category === "Mobil",
+        );
+        const motorList = Object.values(vehicles).filter(
+          (v) => v.category === "Motor",
+        );
+
+        const renderCards = (list) =>
+          list
+            .map((v) => {
+              const style = getVehicleStyle(v);
+              const isSelected = v.id === activeVehicleId;
+              const thumbHtml = v.photo
+                ? `<img src="${v.photo}" alt="${escapeHtml(v.shortName)}" class="w-11 h-11 rounded-xl object-cover border border-slate-200 shrink-0">`
+                : `<div class="w-11 h-11 rounded-xl ${style.badgeBg} text-white flex items-center justify-center font-bold text-[11px] shrink-0 shadow-xs text-center leading-tight px-1">${escapeHtml(v.shortName)}</div>`;
+              return `
+                    <button onclick="selectVehicle('${v.id}')" class="w-full text-left p-3 rounded-2xl border transition-all flex items-start gap-3 ${isSelected ? "bg-blue-50/70 border-blue-400 ring-2 ring-blue-500/15" : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50"}">
+                        ${thumbHtml}
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-2">
+                                <p class="text-xs sm:text-sm font-bold text-slate-900 truncate">${escapeHtml(v.name)}</p>
+                                ${isSelected ? '<span class="px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-semibold shrink-0">Aktif</span>' : ""}
+                            </div>
+                            <p class="text-[11px] text-slate-500 mt-0.5 truncate">${escapeHtml(v.subtitle)}</p>
+                        </div>
+                    </button>`;
+            })
+            .join("");
+
+        body.innerHTML = `
+                ${mobilList.length ? `<div class="space-y-2.5"><div class="flex items-center gap-2"><span class="px-2.5 py-0.5 rounded-lg bg-slate-900 text-white text-[11px] font-bold">MOBIL</span><span class="text-xs text-slate-400">${mobilList.length} kendaraan</span></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">${renderCards(mobilList)}</div></div>` : ""}
+                ${motorList.length ? `<div class="space-y-2.5"><div class="flex items-center gap-2"><span class="px-2.5 py-0.5 rounded-lg bg-slate-900 text-white text-[11px] font-bold">MOTOR</span><span class="text-xs text-slate-400">${motorList.length} kendaraan</span></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">${renderCards(motorList)}</div></div>` : ""}`;
+
+        const m = document.getElementById("vehicleModal");
+        m.classList.remove("hidden");
+        m.classList.add("flex");
+      }
+      function closeVehicleModal() {
+        const m = document.getElementById("vehicleModal");
+        m.classList.add("hidden");
+        m.classList.remove("flex");
+      }
+
+      function selectVehicle(vehicleId) {
+        if (isGenerating) {
+          showToast("Tunggu respon AI selesai.");
+          return;
+        }
+        if (!vehicles[vehicleId]) return;
+        activeVehicleId = vehicleId;
+        saveAllToLocal();
+        updateVehicleUI();
+        ensureSessionForActiveVehicle(true);
+        renderRightPanel();
+        if (activeView === "chat") renderChatArea(false);
+        if (activeView === "notes") renderNotesList();
+        if (activeView === "vehicles") renderVehiclesGrid();
+        closeVehicleModal();
+        closeAllDrawers();
+        showToast(`Kendaraan aktif: ${vehicles[vehicleId].name}`);
+      }
+
+      function openVehicleFormModal(vehicleId = null) {
+        document.getElementById("vehicleForm").reset();
+        pendingVehiclePhoto = "";
+        if (vehicleId && vehicles[vehicleId]) {
+          const v = vehicles[vehicleId];
+          document.getElementById("vehicleFormTitle").textContent =
+            "Edit Kendaraan";
+          document.getElementById("vehEditId").value = v.id;
+          document.getElementById("vehCategoryInput").value =
+            v.category || "Motor";
+          document.getElementById("vehShortNameInput").value =
+            v.shortName || "";
+          document.getElementById("vehNameInput").value = v.name || "";
+          document.getElementById("vehSubtitleInput").value = v.subtitle || "";
+          document.getElementById("vehColorInput").value = v.colorKey || "blue";
+          document.getElementById("vehProfileInput").value =
+            v.expertProfile || "";
+          pendingVehiclePhoto = v.photo || "";
+        } else {
+          document.getElementById("vehicleFormTitle").textContent =
+            "Tambah Kendaraan Baru";
+          document.getElementById("vehEditId").value = "";
+          document.getElementById("vehCategoryInput").value = "Motor";
+          document.getElementById("vehColorInput").value = "blue";
+        }
+        updateVehicleFormPhotoPreview();
+        const m = document.getElementById("vehicleFormModal");
+        m.classList.remove("hidden");
+        m.classList.add("flex");
+      }
+      function closeVehicleFormModal() {
+        const m = document.getElementById("vehicleFormModal");
+        m.classList.add("hidden");
+        m.classList.remove("flex");
+      }
+
+      function updateVehicleFormPhotoPreview() {
+        const box = document.getElementById("vehPhotoPreviewBox"),
+          clearBtn = document.getElementById("vehPhotoClearBtn");
+        if (pendingVehiclePhoto) {
+          box.innerHTML = `<img src="${pendingVehiclePhoto}" class="w-full h-full object-cover">`;
+          clearBtn.classList.remove("hidden");
+        } else {
+          box.textContent = "Foto";
+          clearBtn.classList.add("hidden");
+        }
+      }
+      async function handleVehiclePhotoSelect(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        try {
+          pendingVehiclePhoto = await compressImageFile(file, 600, 0.72);
+          updateVehicleFormPhotoPreview();
+        } catch (err) {
+          showToast(err.message);
+        }
+        event.target.value = "";
+      }
+      function clearVehicleFormPhoto() {
+        pendingVehiclePhoto = "";
+        updateVehicleFormPhotoPreview();
+      }
+
+      function saveVehicleFromModal(e) {
+        e.preventDefault();
+        const editId = document.getElementById("vehEditId").value;
+        const category = document.getElementById("vehCategoryInput").value;
+        const shortName = document
+          .getElementById("vehShortNameInput")
+          .value.trim();
+        const name = document.getElementById("vehNameInput").value.trim();
+        const subtitle = document
+          .getElementById("vehSubtitleInput")
+          .value.trim();
+        const colorKey = document.getElementById("vehColorInput").value;
+        const expertProfile = document
+          .getElementById("vehProfileInput")
+          .value.trim();
+        if (!shortName || !name) return;
+
+        let vehObj;
+        if (editId && vehicles[editId]) {
+          const existing = vehicles[editId];
+          vehObj = {
+            ...existing,
+            category,
+            shortName,
+            name,
+            subtitle,
+            colorKey,
+            photo: pendingVehiclePhoto,
+            expertProfile:
+              expertProfile ||
+              existing.expertProfile ||
+              `${name} (${subtitle})`,
+            parts:
+              existing.category === category && existing.parts
+                ? existing.parts
+                : DEFAULT_PARTS[category],
+          };
+        } else {
+          const newId =
+            "veh_" + Date.now() + "_" + Math.random().toString(36).slice(2, 5);
+          vehObj = {
+            id: newId,
+            category,
+            shortName,
+            name,
+            subtitle,
+            colorKey,
+            photo: pendingVehiclePhoto,
+            parts: DEFAULT_PARTS[category] || DEFAULT_PARTS.Motor,
+            expertProfile:
+              expertProfile || `Kendaraan ${category} ${name} (${subtitle}).`,
+            guideTitle: `Panduan Cepat ${name}`,
+            guideSub: subtitle,
+            guideAskText: `Saya ingin bertanya mengenai ${name} (${subtitle}) terkait: `,
+            guideHtml: `<div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 space-y-1.5"><p class="font-bold text-slate-900">${escapeHtml(name)}</p><p class="text-xs"><strong>Kategori:</strong> ${escapeHtml(category)} • <strong>Spek:</strong> ${escapeHtml(subtitle)}</p></div>`,
+            prompts: {
+              Perbaikan: [
+                {
+                  title: `Analisa Keluhan ${shortName}`,
+                  part: "Umum / Semua Bagian",
+                  cond: "Umum / Tidak Spesifik",
+                  text: `Apa saja penyakit khas dan titik cek utama pada ${name} (${subtitle})?`,
+                },
+              ],
+            },
+          };
+        }
+        vehicles[vehObj.id] = vehObj;
+        saveVehicleRecord(vehObj);
+        populateNoteVehicleSelect();
+        updateVehicleUI();
+        updateBadges();
+        renderRightPanel();
+        renderVehiclesGrid();
+        closeVehicleFormModal();
+        showToast(
+          editId
+            ? `Kendaraan "${name}" diperbarui.`
+            : `Kendaraan "${name}" ditambahkan!`,
+        );
+      }
+
+      /* =========================================================================
+       * 8. SESI CHAT & KOMUNIKASI KE /api/chat VERCEL
+       * ========================================================================= */
+      function getActiveSession() {
+        return sessions.find((s) => s.id === activeSessionId) || null;
+      }
+
+      function ensureSessionForActiveVehicle(shouldSync = true) {
+        const vehicleSessions = sessions.filter(
+          (s) => s.vehicleId === activeVehicleId,
+        );
+        if (vehicleSessions.length > 0) {
+          activeSessionId = vehicleSessions[0].id;
+          if (shouldSync) syncControlsWithActiveSession();
+        } else {
+          createNewSession(shouldSync);
+        }
+      }
+
+      function createNewSession(shouldRender = true) {
+        const v = getActiveVehicle();
+        const newSession = {
+          id:
+            "ses_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+          vehicleId: v.id,
+          title: "Sesi Baru",
+          isAutoNamed: false,
+          mode: "Perbaikan",
+          part: "Umum / Semua Bagian",
+          condition: "Umum / Tidak Spesifik",
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          messages: [],
+        };
+        sessions.unshift(newSession);
+        activeSessionId = newSession.id;
+        saveSession(newSession);
+        if (shouldRender) {
+          if (activeView !== "chat") switchView("chat");
+          syncControlsWithActiveSession();
+          renderRightPanel();
+          renderChatArea(false);
+          closeAllDrawers();
+          document.getElementById("messageInput").focus();
+        }
+      }
+
+      function selectSession(id) {
+        if (isGenerating) {
+          showToast("Tunggu respon selesai.");
+          return;
+        }
+        const target = sessions.find((s) => s.id === id);
+        if (!target) return;
+        if (
+          target.vehicleId &&
+          vehicles[target.vehicleId] &&
+          target.vehicleId !== activeVehicleId
+        ) {
+          activeVehicleId = target.vehicleId;
+          updateVehicleUI();
+        }
+        activeSessionId = id;
+        if (activeView !== "chat") switchView("chat");
+        syncControlsWithActiveSession();
+        renderRightPanel();
+        renderChatArea(false);
+        closeAllDrawers();
+      }
+
+      function setMode(modeId) {
+        const session = getActiveSession();
+        if (!session) return;
+        session.mode = modeId;
+        if (!session.isAutoNamed) session.title = "Sesi Baru";
+        session.updatedAt = Date.now();
+        saveSession(session);
+        renderModeSelector();
+        if (activeView === "chat")
+          document.getElementById("activeHeaderTitle").textContent =
+            session.title;
+        renderRightPanel();
+        if (session.messages.length === 0 && activeView === "chat")
+          renderChatArea(false);
+      }
+
+      function handleContextChange() {
+        const session = getActiveSession();
+        if (!session) return;
+        session.part = document.getElementById("partSelect").value;
+        session.condition = document.getElementById("conditionSelect").value;
+        session.updatedAt = Date.now();
+        saveSession(session);
+        renderRightPanel();
+      }
+
+      function syncControlsWithActiveSession() {
+        const session = getActiveSession();
+        if (!session) return;
+        if (activeView === "chat")
+          document.getElementById("activeHeaderTitle").textContent =
+            session.title;
+        const partSelect = document.getElementById("partSelect");
+        const partExists = Array.from(partSelect.options).some(
+          (o) => o.value === session.part,
+        );
+        partSelect.value = partExists ? session.part : "Umum / Semua Bagian";
+        document.getElementById("conditionSelect").value =
+          session.condition || "Umum / Tidak Spesifik";
+        renderModeSelector();
+      }
+
+      function triggerChatPhotoUpload() {
+        document.getElementById("chatPhotoInput").click();
+      }
+      async function handleChatPhotoSelect(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        try {
+          const dataUrl = await compressImageFile(file, 900, 0.75);
+          pendingChatPhoto = { dataUrl, name: file.name || "Foto terlampir" };
+          document.getElementById("chatPhotoPreviewImg").src = dataUrl;
+          document.getElementById("chatPhotoPreviewName").textContent =
+            pendingChatPhoto.name;
+          const bar = document.getElementById("chatPhotoPreviewBar");
+          bar.classList.remove("hidden");
+          bar.classList.add("flex");
+        } catch (err) {
+          showToast(err.message);
+        }
+        event.target.value = "";
+      }
+      function clearPendingChatPhoto() {
+        pendingChatPhoto = null;
+        const bar = document.getElementById("chatPhotoPreviewBar");
+        bar.classList.add("hidden");
+        bar.classList.remove("flex");
+        document.getElementById("chatPhotoPreviewImg").src = "";
+      }
+
+      function buildFallbackTitle(userText) {
+        const cleaned = userText
+          .replace(
+            /^(halo|hai|bang|om|min|permisi|mau tanya|tanya dong|tolong|saya mau)\s+/gi,
+            "",
+          )
+          .replace(/[^\w\s&/-]/g, "")
+          .trim();
+        const words = cleaned
+          .split(/\s+/)
+          .filter(Boolean)
+          .slice(0, 4)
+          .join(" ");
+        return words
+          ? words.charAt(0).toUpperCase() + words.slice(1)
+          : "Analisa Foto & Keluhan";
+      }
+
+      async function generateSmartTopicTitle(
+        sessionId,
+        shortName,
+        mode,
+        part,
+        userText,
+      ) {
+        try {
+          const prompt = `Ringkas inti pertanyaan otomotif ${shortName} berikut menjadi judul topik sangat singkat (2 sampai 4 kata saja, bahasa Indonesia, tanpa tanda kutip, tanpa titik).\nMode: ${mode} | Bagian: ${part}\nPertanyaan: "${userText}"\nJawab HANYA judul topiknya saja.`;
+          const topicRaw = await callGeminiAPI({
+            contents: [{ role: "user", parts: [{ text: prompt }] }],
+          });
+          const cleanTopic = (topicRaw || "")
+            .replace(/["'`.*#:\n]/g, "")
+            .trim()
+            .slice(0, 42);
+          if (cleanTopic) {
+            const target = sessions.find((s) => s.id === sessionId);
+            if (target) {
+              target.title = cleanTopic;
+              target.isAutoNamed = true;
+              target.updatedAt = Date.now();
+              saveSession(target);
+              if (activeSessionId === sessionId && activeView === "chat")
+                document.getElementById("activeHeaderTitle").textContent =
+                  target.title;
+              renderRightPanel();
+            }
+          }
+        } catch {}
+      }
+
+      async function callGeminiAPI(payload) {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-app-pin": savedPin || "",
+          },
+          body: JSON.stringify({
+            model: GEMINI_MODEL,
+            contents: payload.contents,
+            systemInstruction: payload.systemInstruction,
+          }),
+        });
+
+        if (response.status === 401) {
+          lockApp();
+          throw new Error(
+            "PIN tidak valid atau sesi terkunci. Silakan masukkan PIN kembali.",
+          );
+        }
+
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(result?.error || `HTTP ${response.status}`);
+        }
+
+        const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!text) throw new Error("Respon AI kosong.");
+        return text;
+      }
+
+      async function handleSendMessage(e) {
+        if (e) e.preventDefault();
+        if (isGenerating) return;
+
+        const input = document.getElementById("messageInput");
+        const text = input.value.trim();
+        const photoDataUrl = pendingChatPhoto ? pendingChatPhoto.dataUrl : "";
+        if (!text && !photoDataUrl) return;
+
+        const session = getActiveSession();
+        if (!session) return;
+        const v = getActiveVehicle();
+        const isFirstMessage = session.messages.length === 0;
+        const currentMode = session.mode,
+          currentPart = session.part,
+          currentCond = session.condition;
+        const finalUserText =
+          text || "Tolong analisa kondisi pada foto yang saya lampirkan ini.";
+
+        session.messages.push({
+          role: "user",
+          text: finalUserText,
+          photo: photoDataUrl || "",
+          context: {
+            mode: currentMode,
+            part: currentPart,
+            condition: currentCond,
+          },
+          timestamp: Date.now(),
+        });
+        session.updatedAt = Date.now();
+
+        if (isFirstMessage && !session.isAutoNamed) {
+          session.title = buildFallbackTitle(finalUserText);
+          session.isAutoNamed = true;
+          document.getElementById("activeHeaderTitle").textContent =
+            session.title;
+          generateSmartTopicTitle(
+            session.id,
+            v.shortName,
+            currentMode,
+            currentPart,
+            finalUserText,
+          );
+        }
+
+        sessions = [session, ...sessions.filter((s) => s.id !== session.id)];
+        saveSession(session);
+
+        input.value = "";
+        input.style.height = "auto";
+        clearPendingChatPhoto();
+        isGenerating = true;
+        document.getElementById("sendBtn").disabled = true;
+        renderRightPanel();
+        renderChatArea(true);
+
+        try {
+          const contents = session.messages.map((msg) => {
+            if (msg.role === "user") {
+              const ctx = msg.context || {
+                mode: currentMode,
+                part: currentPart,
+                condition: currentCond,
+              };
+              const enrichedText = `[Kendaraan: ${v.name} (${v.subtitle}) | Mode: ${ctx.mode} | Bagian: ${ctx.part} | Kondisi: ${ctx.condition}]\n\n${msg.text}`;
+              const parts = [{ text: enrichedText }];
+              if (msg.photo) {
+                const b64 = extractBase64Parts(msg.photo);
+                if (b64)
+                  parts.push({
+                    inlineData: { mimeType: b64.mimeType, data: b64.data },
+                  });
+              }
+              return { role: "user", parts };
+            }
+            return { role: "model", parts: [{ text: msg.text }] };
+          });
+
+          const aiReply = await callGeminiAPI({
+            contents,
+            systemInstruction: { parts: [{ text: buildSystemInstruction(v) }] },
+          });
+
+          session.messages.push({
+            role: "model",
+            text: aiReply,
+            timestamp: Date.now(),
+          });
+          session.updatedAt = Date.now();
+          saveSession(session);
+        } catch (err) {
+          session.messages.push({
+            role: "model",
+            text: `Maaf, terjadi kendala saat menghubungi asisten (${err.message}).`,
+            isError: true,
+            timestamp: Date.now(),
+          });
+          session.updatedAt = Date.now();
+          saveSession(session);
+        } finally {
+          isGenerating = false;
+          document.getElementById("sendBtn").disabled = false;
+          renderChatArea(false);
+          renderRightPanel();
+        }
+      }
+
+      function useQuickPrompt(promptObj) {
+        const session = getActiveSession();
+        if (!session || isGenerating) return;
+        session.part = promptObj.part;
+        session.condition = promptObj.cond;
+        document.getElementById("partSelect").value = promptObj.part;
+        document.getElementById("conditionSelect").value = promptObj.cond;
+        saveSession(session);
+        const input = document.getElementById("messageInput");
+        input.value = promptObj.text;
+        autoResizeTextarea(input);
+        handleSendMessage();
+      }
+
+      /* =========================================================================
+       * 9. CATATAN KEJADIAN
+       * ========================================================================= */
+      function populateNoteVehicleSelect() {
+        const sel = document.getElementById("noteVehicleSelect");
+        if (!sel) return;
+        const mobilOpts = Object.values(vehicles)
+          .filter((v) => v.category === "Mobil")
+          .map((v) => `<option value="${v.id}">${escapeHtml(v.name)}</option>`)
+          .join("");
+        const motorOpts = Object.values(vehicles)
+          .filter((v) => v.category === "Motor")
+          .map((v) => `<option value="${v.id}">${escapeHtml(v.name)}</option>`)
+          .join("");
+        sel.innerHTML =
+          (mobilOpts ? `<optgroup label="Mobil">${mobilOpts}</optgroup>` : "") +
+          (motorOpts ? `<optgroup label="Motor">${motorOpts}</optgroup>` : "");
+      }
+
+      function setNotesScope(scope) {
+        notesScope = scope;
+        document.getElementById("notesScopeActiveBtn").className =
+          scope === "active"
+            ? "px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-900 shadow-2xs transition-all"
+            : "px-3 py-1 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
+        document.getElementById("notesScopeAllBtn").className =
+          scope === "all"
+            ? "px-3 py-1 rounded-lg text-xs font-semibold bg-white text-slate-900 shadow-2xs transition-all"
+            : "px-3 py-1 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all";
+        renderNotesList();
+        renderRightPanel();
+      }
+
+      function openNoteModal(noteId = null) {
+        document.getElementById("noteForm").reset();
+        populateNoteVehicleSelect();
+        pendingNotePhoto = "";
+        const todayStr = new Date().toISOString().split("T")[0];
+        if (noteId) {
+          const existing = notes.find((n) => n.id === noteId);
+          if (!existing) return;
+          document.getElementById("noteModalTitle").textContent =
+            "Edit Catatan Kejadian";
+          document.getElementById("noteEditId").value = existing.id;
+          document.getElementById("noteVehicleSelect").value = vehicles[
+            existing.vehicleId
+          ]
+            ? existing.vehicleId
+            : activeVehicleId;
+          document.getElementById("noteCategorySelect").value =
+            existing.category || "Kejadian / Keluhan";
+          document.getElementById("noteDateInput").value =
+            existing.date || todayStr;
+          document.getElementById("noteOdometerInput").value =
+            existing.odometer || "";
+          document.getElementById("noteTitleInput").value =
+            existing.title || "";
+          document.getElementById("noteContentInput").value =
+            existing.content || "";
+          pendingNotePhoto = existing.photo || "";
+        } else {
+          document.getElementById("noteModalTitle").textContent =
+            "Catat Kejadian Kendaraan";
+          document.getElementById("noteEditId").value = "";
+          document.getElementById("noteVehicleSelect").value = activeVehicleId;
+          document.getElementById("noteCategorySelect").value =
+            "Kejadian / Keluhan";
+          document.getElementById("noteDateInput").value = todayStr;
+        }
+        updateNotePhotoPreview();
+        const m = document.getElementById("noteModal");
+        m.classList.remove("hidden");
+        m.classList.add("flex");
+        document.getElementById("noteTitleInput").focus();
+      }
+      function closeNoteModal() {
+        const m = document.getElementById("noteModal");
+        m.classList.add("hidden");
+        m.classList.remove("flex");
+      }
+
+      function updateNotePhotoPreview() {
+        const wrap = document.getElementById("notePhotoPreviewWrap"),
+          img = document.getElementById("notePhotoPreviewImg");
+        if (pendingNotePhoto) {
+          img.src = pendingNotePhoto;
+          wrap.classList.remove("hidden");
+        } else {
+          img.src = "";
+          wrap.classList.add("hidden");
+        }
+      }
+      async function handleNotePhotoSelect(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        try {
+          pendingNotePhoto = await compressImageFile(file, 900, 0.74);
+          updateNotePhotoPreview();
+        } catch (err) {
+          showToast(err.message);
+        }
+        event.target.value = "";
+      }
+      function clearNoteFormPhoto() {
+        pendingNotePhoto = "";
+        updateNotePhotoPreview();
+      }
+
+      function saveNoteFromModal(e) {
+        e.preventDefault();
+        const editId = document.getElementById("noteEditId").value;
+        const vehicleId = document.getElementById("noteVehicleSelect").value;
+        const category = document.getElementById("noteCategorySelect").value;
+        const date = document.getElementById("noteDateInput").value;
+        const odometer = document
+          .getElementById("noteOdometerInput")
+          .value.trim();
+        const title = document.getElementById("noteTitleInput").value.trim();
+        const content = document
+          .getElementById("noteContentInput")
+          .value.trim();
+        if (!title || !content) return;
+
+        let noteObj;
+        if (editId) {
+          noteObj = notes.find((n) => n.id === editId);
+          if (noteObj)
+            Object.assign(noteObj, {
+              vehicleId,
+              category,
+              date,
+              odometer,
+              title,
+              content,
+              photo: pendingNotePhoto,
+              updatedAt: Date.now(),
+            });
+        } else {
+          noteObj = {
+            id:
+              "note_" +
+              Date.now() +
+              "_" +
+              Math.random().toString(36).slice(2, 6),
+            vehicleId,
+            category,
+            date,
+            odometer,
+            title,
+            content,
+            photo: pendingNotePhoto,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          };
+          notes.unshift(noteObj);
+        }
+        notes.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+        saveNoteRecord(noteObj);
+        updateBadges();
+        renderNotesList();
+        renderRightPanel();
+        closeNoteModal();
+        showToast("Catatan tersimpan & tersinkron!");
+      }
+
+      function askAiAboutNote(noteId) {
+        const note = notes.find((n) => n.id === noteId);
+        if (!note) return;
+        if (
+          note.vehicleId &&
+          vehicles[note.vehicleId] &&
+          note.vehicleId !== activeVehicleId
+        ) {
+          activeVehicleId = note.vehicleId;
+          updateVehicleUI();
+        }
+        createNewSession(false);
+        const session = getActiveSession();
+        if (session) {
+          session.mode =
+            note.category === "Modifikasi"
+              ? "Modifikasi"
+              : note.category === "Servis & Oli"
+                ? "Perawatan"
+                : "Perbaikan";
+          saveSession(session);
+        }
+        switchView("chat");
+        syncControlsWithActiveSession();
+        if (note.photo)
+          pendingChatPhoto = {
+            dataUrl: note.photo,
+            name: `Foto dari catatan: ${note.title}`,
+          };
+        const odoText = note.odometer ? ` (Odometer: ${note.odometer})` : "";
+        const input = document.getElementById("messageInput");
+        input.value = `Saya punya catatan kejadian tanggal ${note.date}${odoText} dengan judul "${note.title}":\n\n"${note.content}"\n\nMohon analisa dan saran penanganannya untuk ${getActiveVehicle().name}.`;
+        autoResizeTextarea(input);
+        handleSendMessage();
+      }
+
+      function renderNotesList() {
+        const container = document.getElementById("notesListContainer");
+        if (!container) return;
+        const catFilter = document.getElementById("notesCategoryFilter").value;
+        const activeVeh = getActiveVehicle();
+        const filtered = notes.filter(
+          (n) =>
+            (notesScope === "all" || n.vehicleId === activeVehicleId) &&
+            (catFilter === "Semua" || n.category === catFilter),
+        );
+
+        if (filtered.length === 0) {
+          container.innerHTML = `<div class="col-span-full py-14 px-6 text-center bg-white rounded-2xl border border-dashed border-slate-200 space-y-3"><h3 class="text-sm font-bold text-slate-800">Belum ada catatan kejadian</h3><p class="text-xs text-slate-500 max-w-sm mx-auto">${notesScope === "active" ? `Catat keluhan, ganti oli, atau perbaikan untuk <strong>${escapeHtml(activeVeh.name)}</strong>.` : "Belum ada catatan tersimpan di garasi Anda."}</p><button onclick="openNoteModal()" class="inline-flex items-center gap-1.5 py-2 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-colors">+ Buat Catatan Pertama</button></div>`;
+          return;
+        }
+
+        container.innerHTML = filtered
+          .map((n) => {
+            const v = vehicles[n.vehicleId] || getActiveVehicle();
+            const style = getVehicleStyle(v);
+            const catCls =
+              NOTE_CATEGORY_BADGES[n.category] ||
+              "bg-slate-100 text-slate-700 border-slate-200";
+            return `
+                    <article class="bg-white rounded-2xl border border-slate-200/90 p-4 flex flex-col justify-between gap-3 hover:border-slate-300 transition-all shadow-2xs">
+                        <div class="space-y-2.5">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold text-white ${style.badgeBg}">${escapeHtml(v.shortName)}</span>
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold border ${catCls}">${escapeHtml(n.category)}</span>
+                                </div>
+                                <div class="flex items-center gap-1 shrink-0">
+                                    <button onclick="openNoteModal('${n.id}')" title="Edit" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z"/></svg></button>
+                                    <button onclick="openDeleteModal('note', '${n.id}')" title="Hapus" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm leading-snug">${escapeHtml(n.title)}</h4>
+                                <p class="text-xs text-slate-600 mt-1.5 leading-relaxed whitespace-pre-wrap">${escapeHtml(n.content)}</p>
+                            </div>
+                            ${n.photo ? `<img src="${n.photo}" onclick="openPhotoLightbox('${n.photo}')" alt="Foto Catatan" class="w-full max-h-44 object-cover rounded-xl border border-slate-200 cursor-zoom-in">` : ""}
+                        </div>
+                        <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2 text-[11px] text-slate-400 font-medium">
+                                <span>${escapeHtml(n.date || "")}</span>
+                                ${n.odometer ? `<span>•</span><span class="text-slate-600">${escapeHtml(n.odometer)}</span>` : ""}
+                            </div>
+                            <button onclick="askAiAboutNote('${n.id}')" class="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 text-[11px] font-semibold transition-colors">⚡ Analisa AI</button>
+                        </div>
+                    </article>`;
+          })
+          .join("");
+      }
+
+      /* =========================================================================
+       * 10. RENDER MODE, PANEL KANAN & CHAT
+       * ========================================================================= */
+      function renderModeSelector() {
+        const activeMode = getActiveSession()?.mode || "Perbaikan";
+        document.getElementById("modeSelector").innerHTML = MODES.map(
+          (m) =>
+            `<button type="button" onclick="setMode('${m.id}')" class="py-1.5 px-2.5 rounded-xl text-xs font-semibold text-center transition-all ${m.id === activeMode ? m.activeClass : m.inactiveClass}">${m.label}</button>`,
+        ).join("");
+      }
+
+      function renderHistoryFilters() {
+        const filters = ["Semua", ...MODES.map((m) => m.id)];
+        document.getElementById("historyFilterContainer").innerHTML = filters
+          .map(
+            (f) =>
+              `<button type="button" onclick="setHistoryFilter('${f}')" class="px-2.5 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap transition-colors ${f === activeFilterMode ? "bg-slate-900 text-white" : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-100"}">${f}</button>`,
+          )
+          .join("");
+      }
+      function setHistoryFilter(mode) {
+        activeFilterMode = mode;
+        renderHistoryFilters();
+        renderRightPanel();
+      }
+
+      function renderRightPanel() {
+        const titleEl = document.getElementById("rightPanelTitle");
+        const filterContainer = document.getElementById(
+          "historyFilterContainer",
+        );
+        const quickAddBtn = document.getElementById("rightPanelQuickAddBtn");
+        const listEl = document.getElementById("rightPanelList");
+        const query = (document.getElementById("rightPanelSearch").value || "")
+          .toLowerCase()
+          .trim();
+
+        if (activeView === "chat") {
+          titleEl.textContent = "List Diskusi";
+          filterContainer.classList.remove("hidden");
+          quickAddBtn.classList.add("hidden");
+          const filtered = sessions.filter(
+            (s) =>
+              (activeFilterMode === "Semua" || s.mode === activeFilterMode) &&
+              (!query ||
+                s.title.toLowerCase().includes(query) ||
+                (s.part || "").toLowerCase().includes(query)),
+          );
+          if (filtered.length === 0) {
+            listEl.innerHTML = `<div class="py-8 text-center px-3"><p class="text-xs text-slate-400">Belum ada diskusi.</p></div>`;
+            return;
+          }
+
+          listEl.innerHTML = filtered
+            .map((s) => {
+              const isActive = s.id === activeSessionId;
+              const modeObj = MODES.find((m) => m.id === s.mode) || MODES[0];
+              const v = vehicles[s.vehicleId] || getActiveVehicle();
+              const style = getVehicleStyle(v);
+              return `
+                        <div onclick="selectSession('${s.id}')" class="group relative p-2.5 rounded-xl border cursor-pointer transition-all ${isActive ? "bg-blue-50/90 border-blue-300" : "bg-white border-slate-200/70 hover:bg-slate-50 hover:border-slate-300"}">
+                            <div class="flex items-start justify-between gap-2">
+                                <p class="text-xs font-semibold ${isActive ? "text-blue-900" : "text-slate-800"} leading-snug line-clamp-2 pr-5">${escapeHtml(s.title)}</p>
+                                <button onclick="event.stopPropagation(); openDeleteModal('session', '${s.id}')" title="Hapus" class="opacity-100 lg:opacity-0 group-hover:opacity-100 p-1 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all shrink-0"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                            <div class="mt-1.5 flex items-center justify-between gap-1.5">
+                                <div class="flex items-center gap-1">
+                                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold text-white ${style.badgeBg}">${escapeHtml(v.shortName)}</span>
+                                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium border ${modeObj.badgeClass}">${s.mode}</span>
+                                </div>
+                                <span class="text-[10px] text-slate-400">${formatShortDate(s.updatedAt)}</span>
+                            </div>
+                        </div>`;
+            })
+            .join("");
+        } else if (activeView === "notes") {
+          titleEl.textContent = "List Catatan";
+          filterContainer.classList.add("hidden");
+          quickAddBtn.classList.add("hidden");
+          const filtered = notes.filter(
+            (n) =>
+              (notesScope === "all" || n.vehicleId === activeVehicleId) &&
+              (!query ||
+                (n.title || "").toLowerCase().includes(query) ||
+                (n.content || "").toLowerCase().includes(query)),
+          );
+          if (filtered.length === 0) {
+            listEl.innerHTML = `<div class="py-8 text-center px-3"><p class="text-xs text-slate-400">Belum ada catatan.</p></div>`;
+            return;
+          }
+
+          listEl.innerHTML = filtered
+            .map((n) => {
+              const v = vehicles[n.vehicleId] || getActiveVehicle();
+              const style = getVehicleStyle(v);
+              const catCls =
+                NOTE_CATEGORY_BADGES[n.category] ||
+                "bg-slate-100 text-slate-700 border-slate-200";
+              return `
+                        <div onclick="openNoteModal('${n.id}')" class="p-2.5 rounded-xl bg-white border border-slate-200/80 hover:border-blue-300 hover:bg-blue-50/30 cursor-pointer transition-all space-y-1.5">
+                            <div class="flex items-start justify-between gap-2">
+                                <p class="text-xs font-bold text-slate-800 line-clamp-1">${escapeHtml(n.title)}</p>
+                                ${n.photo ? '<span class="text-[10px] text-blue-600 shrink-0">📷</span>' : ""}
+                            </div>
+                            <p class="text-[11px] text-slate-500 line-clamp-2">${escapeHtml(n.content)}</p>
+                            <div class="flex items-center justify-between gap-1 pt-0.5">
+                                <div class="flex items-center gap-1">
+                                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold text-white ${style.badgeBg}">${escapeHtml(v.shortName)}</span>
+                                    <span class="px-1.5 py-0.5 rounded text-[9px] font-semibold border ${catCls}">${escapeHtml(n.category.split(" ")[0])}</span>
+                                </div>
+                                <span class="text-[10px] text-slate-400">${escapeHtml(n.date || "")}</span>
+                            </div>
+                        </div>`;
+            })
+            .join("");
+        } else {
+          titleEl.textContent = "Daftar Kendaraan";
+          filterContainer.classList.add("hidden");
+          quickAddBtn.classList.remove("hidden");
+          const list = Object.values(vehicles).filter(
+            (v) =>
+              !query ||
+              v.name.toLowerCase().includes(query) ||
+              v.shortName.toLowerCase().includes(query) ||
+              v.category.toLowerCase().includes(query),
+          );
+          listEl.innerHTML = list
+            .map((v) => {
+              const style = getVehicleStyle(v);
+              const isActive = v.id === activeVehicleId;
+              return `
+                        <div onclick="selectVehicle('${v.id}')" class="p-2.5 rounded-xl border cursor-pointer transition-all flex items-center justify-between gap-2 ${isActive ? "bg-blue-50/90 border-blue-300" : "bg-white border-slate-200/80 hover:bg-slate-50"}">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="px-1.5 py-1 rounded-lg text-[10px] font-bold text-white ${style.badgeBg} shrink-0">${escapeHtml(v.shortName)}</span>
+                                <div class="min-w-0"><p class="text-xs font-bold text-slate-800 truncate">${escapeHtml(v.name)}</p><p class="text-[10px] text-slate-500 truncate">${escapeHtml(v.category)}</p></div>
+                            </div>
+                        </div>`;
+            })
+            .join("");
+        }
+      }
+
+      function renderChatArea(showTyping = false) {
+        const session = getActiveSession();
+        if (!session) return;
+        const chatInner = document.getElementById("chatInner"),
+          chatContainer = document.getElementById("chatContainer");
+        const v = getActiveVehicle(),
+          style = getVehicleStyle(v);
+
+        if (session.messages.length === 0 && !showTyping) {
+          const modeObj = MODES.find((m) => m.id === session.mode) || MODES[0];
+          const prompts =
+            (v.prompts && v.prompts[session.mode]) ||
+            (v.prompts && v.prompts["Perbaikan"]) ||
+            [];
+          chatInner.innerHTML = `
+                    <div class="py-4 sm:py-7 space-y-6">
+                        <div class="text-center space-y-2.5 max-w-lg mx-auto">
+                            <div class="flex items-center justify-center gap-1.5 flex-wrap">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${style.pillClass}">${escapeHtml(v.category)}: ${escapeHtml(v.name)}</span>
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${modeObj.badgeClass}">Mode ${session.mode}</span>
+                            </div>
+                            <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">Asisten Garasi Pamikul</h3>
+                            <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">Fokus teknis <strong>${escapeHtml(v.subtitle)}</strong>. Ceritakan keluhan, rencana modifikasi, atau klik ikon <strong>Foto</strong> di bawah untuk analisa gambar langsung.</p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            ${prompts.map((p) => `<button onclick='useQuickPrompt(${JSON.stringify(p).replace(/'/g, "&#39;")})' class="text-left p-4 rounded-2xl bg-slate-50/80 hover:bg-blue-50/60 border border-slate-200/90 hover:border-blue-300 transition-all group"><div class="flex items-center justify-between gap-2 mb-1"><span class="text-xs font-bold text-slate-900 group-hover:text-blue-700">${escapeHtml(p.title)}</span></div><p class="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">${escapeHtml(p.text)}</p></button>`).join("")}
+                        </div>
+                    </div>`;
+          return;
+        }
+
+        let html = session.messages
+          .map((msg) => {
+            if (msg.role === "user") {
+              const ctx = msg.context;
+              const ctxBadge = ctx
+                ? `<div class="flex flex-wrap justify-end gap-1 mb-1.5"><span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-medium">${escapeHtml(ctx.mode)}</span>${ctx.part && ctx.part !== "Umum / Semua Bagian" ? `<span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-medium">${escapeHtml(ctx.part)}</span>` : ""}</div>`
+                : "";
+              return `<div class="flex flex-col items-end">${ctxBadge}<div class="max-w-[88%] sm:max-w-[78%] px-4 py-3 rounded-2xl rounded-tr-sm bg-blue-600 text-white text-sm leading-relaxed shadow-xs space-y-2.5">${msg.photo ? `<img src="${msg.photo}" onclick="openPhotoLightbox('${msg.photo}')" class="max-h-56 rounded-xl border border-white/20 cursor-zoom-in object-cover">` : ""}<div class="whitespace-pre-wrap">${escapeHtml(msg.text)}</div></div></div>`;
+            }
+            const bubbleCls = msg.isError
+              ? "bg-rose-50 border-rose-200 text-rose-800"
+              : "bg-slate-50/90 border-slate-200/80 text-slate-800";
+            return `<div class="flex items-start gap-3"><div class="w-8 h-8 rounded-xl ${style.badgeBg} text-white flex items-center justify-center font-bold text-[10px] shrink-0 shadow-2xs mt-0.5 text-center leading-tight px-1">${escapeHtml(v.shortName.slice(0, 5))}</div><div class="flex-1 min-w-0 px-4 py-3.5 rounded-2xl rounded-tl-sm border ${bubbleCls} text-sm leading-relaxed space-y-2.5">${formatMarkdown(msg.text)}</div></div>`;
+          })
+          .join("");
+
+        if (showTyping) {
+          html += `<div class="flex items-start gap-3"><div class="w-8 h-8 rounded-xl ${style.badgeBg} text-white flex items-center justify-center font-bold text-[10px] shrink-0 shadow-2xs">${escapeHtml(v.shortName.slice(0, 5))}</div><div class="px-4 py-3.5 rounded-2xl rounded-tl-sm bg-slate-50 border border-slate-200/80 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 dot-1"></span><span class="w-2 h-2 rounded-full bg-blue-500 dot-2"></span><span class="w-2 h-2 rounded-full bg-blue-500 dot-3"></span><span class="text-xs text-slate-400 ml-1.5">Menganalisa ${escapeHtml(v.shortName)}...</span></div></div>`;
+        }
+        chatInner.innerHTML = html;
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      /* =========================================================================
+       * 11. UTILITAS, MODAL & BACKUP/RESTORE JSON -> FIRESTORE
+       * ========================================================================= */
+      function escapeHtml(str) {
+        return String(str || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+      function formatShortDate(ts) {
+        try {
+          return new Date(ts).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "short",
+          });
+        } catch {
+          return "";
+        }
+      }
+      function autoResizeTextarea(el) {
+        el.style.height = "auto";
+        el.style.height = Math.min(el.scrollHeight, 144) + "px";
+      }
+      function handleInputKeydown(e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          handleSendMessage();
+        }
+      }
+
+      function formatMarkdown(raw) {
+        const safe = escapeHtml(raw);
+        const lines = safe.split("\n");
+        let html = "",
+          inUl = false,
+          inOl = false;
+        const closeLists = () => {
+          if (inUl) {
+            html += "</ul>";
+            inUl = false;
+          }
+          if (inOl) {
+            html += "</ol>";
+            inOl = false;
+          }
+        };
+        const applyInline = (line) =>
+          line
+            .replace(
+              /\*\*(.+?)\*\*/g,
+              '<strong class="font-semibold text-slate-900">$1</strong>',
+            )
+            .replace(/\*(.+?)\*/g, '<em class="italic">$1</em>')
+            .replace(
+              /`(.+?)`/g,
+              '<code class="px-1.5 py-0.5 rounded bg-slate-200/70 text-slate-800 text-xs font-mono">$1</code>',
+            );
+
+        for (const rawLine of lines) {
+          const line = rawLine.trim();
+          if (!line) {
+            closeLists();
+            continue;
+          }
+          if (/^###\s+/.test(line)) {
+            closeLists();
+            html += `<h4 class="font-bold text-slate-900 text-sm pt-1">${applyInline(line.replace(/^###\s+/, ""))}</h4>`;
+          } else if (/^##\s+/.test(line)) {
+            closeLists();
+            html += `<h3 class="font-bold text-slate-900 text-base pt-1">${applyInline(line.replace(/^##\s+/, ""))}</h3>`;
+          } else if (/^[-*•]\s+/.test(line)) {
+            if (inOl) {
+              html += "</ol>";
+              inOl = false;
+            }
+            if (!inUl) {
+              html += '<ul class="list-disc pl-5 space-y-1 text-slate-700">';
+              inUl = true;
+            }
+            html += `<li>${applyInline(line.replace(/^[-*•]\s+/, ""))}</li>`;
+          } else if (/^\d+\.\s+/.test(line)) {
+            if (inUl) {
+              html += "</ul>";
+              inUl = false;
+            }
+            if (!inOl) {
+              html += '<ol class="list-decimal pl-5 space-y-1 text-slate-700">';
+              inOl = true;
+            }
+            html += `<li>${applyInline(line.replace(/^\d+\.\s+/, ""))}</li>`;
+          } else {
+            closeLists();
+            html += `<p class="text-slate-700">${applyInline(line)}</p>`;
+          }
+        }
+        closeLists();
+        return html;
+      }
+
+      function openPhotoLightbox(src) {
+        if (!src) return;
+        document.getElementById("lightboxImg").src = src;
+        const lb = document.getElementById("photoLightbox");
+        lb.classList.remove("hidden");
+        lb.classList.add("flex");
+      }
+      function closePhotoLightbox() {
+        const lb = document.getElementById("photoLightbox");
+        lb.classList.add("hidden");
+        lb.classList.remove("flex");
+        document.getElementById("lightboxImg").src = "";
+      }
+
+      function copySessionSummary() {
+        const session = getActiveSession();
+        if (!session || session.messages.length === 0) {
+          showToast("Belum ada obrolan.");
+          return;
+        }
+        const v = vehicles[session.vehicleId] || getActiveVehicle();
+        const lines = [
+          `=== ${session.title} ===`,
+          `Kendaraan: ${v.name} | Mode: ${session.mode}`,
+          `----------------------------------------`,
+        ];
+        session.messages.forEach((m) => {
+          lines.push(
+            `\n[${m.role === "user" ? "Pengguna" : "Garasi Pamikul"}]`,
+          );
+          lines.push(m.text);
+        });
+        navigator.clipboard
+          ?.writeText(lines.join("\n"))
+          .then(() => showToast("Obrolan disalin!"))
+          .catch(() => showToast("Gagal menyalin."));
+      }
+
+      function openGuideModal() {
+        const v = getActiveVehicle();
+        document.getElementById("guideModalTitle").textContent =
+          v.guideTitle || `Panduan ${v.name}`;
+        document.getElementById("guideModalSub").textContent =
+          v.guideSub || v.subtitle;
+        document.getElementById("guideModalBody").innerHTML =
+          v.guideHtml || `<p>${escapeHtml(v.expertProfile || v.subtitle)}</p>`;
+        const m = document.getElementById("guideModal");
+        m.classList.remove("hidden");
+        m.classList.add("flex");
+        closeAllDrawers();
+      }
+      function closeGuideModal() {
+        const m = document.getElementById("guideModal");
+        m.classList.add("hidden");
+        m.classList.remove("flex");
+      }
+      function askFromGuide() {
+        const v = getActiveVehicle();
+        closeGuideModal();
+        if (activeView !== "chat") switchView("chat");
+        setMode("Perbaikan");
+        const input = document.getElementById("messageInput");
+        input.value = v.guideAskText || `Tanya seputar ${v.name}: `;
+        input.focus();
+        autoResizeTextarea(input);
+      }
+
+      function openRenameModal() {
+        const s = getActiveSession();
+        if (!s) return;
+        document.getElementById("renameInput").value = s.title;
+        const m = document.getElementById("renameModal");
+        m.classList.remove("hidden");
+        m.classList.add("flex");
+        document.getElementById("renameInput").focus();
+      }
+      function closeRenameModal() {
+        const m = document.getElementById("renameModal");
+        m.classList.add("hidden");
+        m.classList.remove("flex");
+      }
+      function confirmRename() {
+        const s = getActiveSession(),
+          val = document.getElementById("renameInput").value.trim();
+        if (s && val) {
+          s.title = val;
+          s.isAutoNamed = true;
+          s.updatedAt = Date.now();
+          saveSession(s);
+          document.getElementById("activeHeaderTitle").textContent = val;
+          renderRightPanel();
+        }
+        closeRenameModal();
+      }
+
+      function openDeleteModal(type, id) {
+        if (type === "vehicle" && Object.keys(vehicles).length <= 1) {
+          showToast("Minimal harus ada 1 kendaraan.");
+          return;
+        }
+        deleteTarget = { type, id };
+        const titles = {
+          note: "Hapus Catatan?",
+          session: "Hapus Diskusi?",
+          vehicle: "Hapus Kendaraan?",
+        };
+        document.getElementById("deleteModalTitle").textContent =
+          titles[type] || "Hapus Item?";
+        const m = document.getElementById("deleteModal");
+        m.classList.remove("hidden");
+        m.classList.add("flex");
+      }
+      function closeDeleteModal() {
+        deleteTarget = null;
+        const m = document.getElementById("deleteModal");
+        m.classList.add("hidden");
+        m.classList.remove("flex");
+      }
+      async function confirmDeleteItem() {
+        if (!deleteTarget) return;
+        const { type, id } = deleteTarget;
+        if (type === "session") {
+          sessions = sessions.filter((s) => s.id !== id);
+          await deleteSessionRecord(id);
+          if (activeSessionId === id) ensureSessionForActiveVehicle(true);
+          renderRightPanel();
+          if (activeView === "chat") renderChatArea(false);
+        } else if (type === "note") {
+          notes = notes.filter((n) => n.id !== id);
+          await deleteNoteRecord(id);
+          updateBadges();
+          renderNotesList();
+          renderRightPanel();
+        } else if (type === "vehicle") {
+          delete vehicles[id];
+          await deleteVehicleRecord(id);
+          if (activeVehicleId === id)
+            activeVehicleId = Object.keys(vehicles)[0];
+          populateNoteVehicleSelect();
+          updateVehicleUI();
+          updateBadges();
+          ensureSessionForActiveVehicle(true);
+          renderVehiclesGrid();
+          renderRightPanel();
+        }
+        closeDeleteModal();
+        showToast("Berhasil dihapus.");
+      }
+
+      let toastTimer = null;
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.remove("translate-y-16", "opacity-0");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(
+          () => toast.classList.add("translate-y-16", "opacity-0"),
+          2600,
+        );
+      }
+
+      function exportBackupJson() {
+        try {
+          const payload = {
+            app: "Garasi Pamikul",
+            version: 2,
+            exportedAt: new Date().toISOString(),
+            activeVehicleId,
+            vehicles,
+            sessions,
+            notes,
+          };
+          const blob = new Blob([JSON.stringify(payload, null, 2)], {
+            type: "application/json;charset=utf-8",
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `garasi-pamikul-backup-${new Date().toISOString().split("T")[0]}.json`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          showToast("Backup JSON berhasil diunduh!");
+        } catch {
+          showToast("Gagal membuat backup.");
+        }
+      }
+
+      function triggerImportJson() {
+        const i = document.getElementById("jsonFileInput");
+        if (i) {
+          i.value = "";
+          i.click();
+        }
+      }
+      function handleJsonFileSelect(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const parsed = JSON.parse(e.target.result);
+            const hasSessions = Array.isArray(parsed.sessions),
+              hasNotes = Array.isArray(parsed.notes),
+              hasVehicles =
+                parsed.vehicles && typeof parsed.vehicles === "object";
+            if (!hasSessions && !hasNotes && !hasVehicles) {
+              showToast("Format JSON tidak valid.");
+              return;
+            }
+            pendingRestoreData = {
+              vehicles: hasVehicles ? parsed.vehicles : null,
+              sessions: hasSessions ? parsed.sessions : [],
+              notes: hasNotes ? parsed.notes : [],
+              activeVehicleId: parsed.activeVehicleId || null,
+            };
+            document.getElementById("restoreSummaryBox").innerHTML =
+              `<p><strong>File:</strong> ${escapeHtml(file.name)}</p><p><strong>Isi:</strong> ${hasVehicles ? Object.keys(parsed.vehicles).length + " kendaraan, " : ""}${pendingRestoreData.notes.length} catatan, ${pendingRestoreData.sessions.length} diskusi</p>`;
+            const m = document.getElementById("restoreModal");
+            m.classList.remove("hidden");
+            m.classList.add("flex");
+          } catch {
+            showToast("File JSON rusak.");
+          }
+        };
+        reader.readAsText(file);
+      }
+      function closeRestoreModal() {
+        pendingRestoreData = null;
+        const m = document.getElementById("restoreModal");
+        m.classList.add("hidden");
+        m.classList.remove("flex");
+      }
+
+      async function applyRestoreJson(mode) {
+        if (!pendingRestoreData) return;
+        if (pendingRestoreData.vehicles)
+          vehicles =
+            mode === "replace"
+              ? pendingRestoreData.vehicles
+              : { ...vehicles, ...pendingRestoreData.vehicles };
+        const fallbackVehId = Object.keys(vehicles)[0] || "b13";
+
+        const normSessions = pendingRestoreData.sessions
+          .filter((s) => s && s.id)
+          .map((s) => ({
+            ...s,
+            vehicleId:
+              s.vehicleId && vehicles[s.vehicleId]
+                ? s.vehicleId
+                : fallbackVehId,
+            messages: Array.isArray(s.messages) ? s.messages : [],
+            updatedAt: s.updatedAt || Date.now(),
+          }));
+        const normNotes = pendingRestoreData.notes
+          .filter((n) => n && n.id)
+          .map((n) => ({
+            ...n,
+            vehicleId:
+              n.vehicleId && vehicles[n.vehicleId]
+                ? n.vehicleId
+                : fallbackVehId,
+            updatedAt: n.updatedAt || Date.now(),
+          }));
+
+        if (mode === "replace") {
+          sessions = normSessions;
+          notes = normNotes;
+        } else {
+          const sMap = new Map(sessions.map((s) => [s.id, s]));
+          normSessions.forEach((s) => {
+            if (
+              !sMap.has(s.id) ||
+              (s.updatedAt || 0) >= (sMap.get(s.id).updatedAt || 0)
+            )
+              sMap.set(s.id, s);
+          });
+          sessions = Array.from(sMap.values());
+          const nMap = new Map(notes.map((n) => [n.id, n]));
+          normNotes.forEach((n) => {
+            if (
+              !nMap.has(n.id) ||
+              (n.updatedAt || 0) >= (nMap.get(n.id).updatedAt || 0)
+            )
+              nMap.set(n.id, n);
+          });
+          notes = Array.from(nMap.values());
+        }
+
+        sessions.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+        notes.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+        if (
+          pendingRestoreData.activeVehicleId &&
+          vehicles[pendingRestoreData.activeVehicleId]
+        )
+          activeVehicleId = pendingRestoreData.activeVehicleId;
+
+        saveAllToLocal();
+        // Sinkronkan seluruh hasil Load JSON ke Cloud Firestore
+        await Promise.all([
+          ...Object.values(vehicles).map((v) => saveVehicleRecord(v)),
+          ...sessions.map((s) => saveSession(s)),
+          ...notes.map((n) => saveNoteRecord(n)),
+        ]);
+
+        populateNoteVehicleSelect();
+        updateVehicleUI();
+        updateBadges();
+        ensureSessionForActiveVehicle(true);
+        renderRightPanel();
+        if (activeView === "chat") renderChatArea(false);
+        if (activeView === "notes") renderNotesList();
+        if (activeView === "vehicles") renderVehiclesGrid();
+        closeRestoreModal();
+        closeAllDrawers();
+        showToast("Backup JSON berhasil dimuat & disinkron ke Cloud!");
+      }
+
+      Object.assign(window, {
+        handlePinSubmit,
+        lockApp,
+        toggleLeftPanel,
+        toggleRightPanel,
+        closeAllDrawers,
+        openVehicleModal,
+        closeVehicleModal,
+        selectVehicle,
+        openVehicleFormModal,
+        closeVehicleFormModal,
+        handleVehiclePhotoSelect,
+        clearVehicleFormPhoto,
+        saveVehicleFromModal,
+        setVehicleFilter,
+        switchView,
+        createNewSession,
+        selectSession,
+        setMode,
+        handleContextChange,
+        handleSendMessage,
+        useQuickPrompt,
+        triggerChatPhotoUpload,
+        handleChatPhotoSelect,
+        clearPendingChatPhoto,
+        renderRightPanel,
+        setHistoryFilter,
+        setNotesScope,
+        renderNotesList,
+        openNoteModal,
+        closeNoteModal,
+        handleNotePhotoSelect,
+        clearNoteFormPhoto,
+        saveNoteFromModal,
+        askAiAboutNote,
+        autoResizeTextarea,
+        handleInputKeydown,
+        openPhotoLightbox,
+        closePhotoLightbox,
+        copySessionSummary,
+        openGuideModal,
+        closeGuideModal,
+        askFromGuide,
+        openRenameModal,
+        closeRenameModal,
+        confirmRename,
+        openDeleteModal,
+        closeDeleteModal,
+        confirmDeleteItem,
+        exportBackupJson,
+        triggerImportJson,
+        handleJsonFileSelect,
+        closeRestoreModal,
+        applyRestoreJson,
+      });
+
+      window.addEventListener("DOMContentLoaded", initApp);
+    </script>
+  </body>
+</html>
